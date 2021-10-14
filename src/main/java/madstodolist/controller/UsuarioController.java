@@ -2,6 +2,7 @@ package madstodolist.controller;
 
 
 import madstodolist.authentication.ManagerUserSession;
+import madstodolist.authentication.UsuarioNoLogeadoException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
@@ -28,7 +29,16 @@ public class UsuarioController {
     @GetMapping("/usuarios")
     public String listadoUsuarios(Model model, HttpSession session) {
 
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+
+        managerUserSession.comprobarExisteUsuario(idUsuario);
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
         List<Usuario> usuarios = usuarioService.allUsuarios();
+        model.addAttribute("usuario", usuario);
         model.addAttribute("usuarios", usuarios);
         return "usuarios";
     }
