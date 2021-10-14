@@ -26,6 +26,12 @@ public class ManagerUserSession {
         return true;
     }
 
+    public void comprobarExisteUsuario(Long idUsuario) {
+        if(idUsuario == null){
+            throw new UsuarioNoLogeadoException();
+        }
+    }
+
     public Long usuarioLogeado(HttpSession session) {
         return (Long) session.getAttribute("idUsuarioLogeado");
     }

@@ -1,5 +1,7 @@
 package madstodolist;
 
+import madstodolist.authentication.ManagerUserSession;
+import madstodolist.authentication.UsuarioNoLogeadoException;
 import madstodolist.model.Usuario;
 import madstodolist.service.UsuarioService;
 import org.junit.jupiter.api.Test;
@@ -8,6 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -24,6 +29,9 @@ public class UsuarioWebTest {
 
     @MockBean
     private UsuarioService usuarioService;
+
+    @MockBean
+    private ManagerUserSession userSession;
 
     // Ejemplo de test en el que se utiliza un mock
     @Test
@@ -82,4 +90,35 @@ public class UsuarioWebTest {
                 .andExpect(content().string(containsString("No existe usuario")));
     }
 
+    @Test
+    public void servicioAllUsuariosError() throws Exception {
+        this.mockMvc.perform(get("/usuarios"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void servicioAllUsuarios() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/usuarios"))
+                .andExpect(content().string(containsString("Email")));
+    }
+
+    @Test
+    public void servicioAllUsuarios2() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        List<Usuario> usuarios = new ArrayList<>();
+        usuarios.add(usuario);
+        when(usuarioService.findById(null)).thenReturn(usuario);
+        when(usuarioService.allUsuarios()).thenReturn(usuarios);
+
+        this.mockMvc.perform(get("/usuarios"))
+                .andExpect(content().string(containsString("domingo@ua.es")))
+                .andExpect(content().string(containsString("1")));
+        ;
+    }
 }
