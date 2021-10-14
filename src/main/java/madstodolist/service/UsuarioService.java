@@ -1,5 +1,7 @@
 package madstodolist.service;
 
+import madstodolist.controller.exception.UsuarioNotFoundException;
+import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.model.UsuarioRepository;
 import org.slf4j.Logger;
@@ -8,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,6 +55,18 @@ public class UsuarioService {
             throw new UsuarioServiceException("El usuario no tiene password");
         else return usuarioRepository.save(usuario);
     }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> allUsuarios() {
+        logger.debug("Devolviendo todos los usuarios " );
+
+        List<Usuario> usuarios = new ArrayList<>();
+        usuarioRepository.findAll().forEach(usuarios::add);
+
+        Collections.sort(usuarios, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
+        return usuarios;
+    }
+
 
     @Transactional(readOnly = true)
     public Usuario findByEmail(String email) {
