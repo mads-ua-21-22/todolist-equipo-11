@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Descripción del usuario')"></head>
+
+<body>
+<header th:replace="/navbar.html :: header (username=${usuarioSesion.nombre}, userid=${usuarioSesion.id})"> </header>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h1>Descripcion del usuario: <td th:text="${usuario.id}"></td></h1>
+        <ul>
+            <li>Id del usuario: <td th:text="${usuario.id}"></td> </li>
+            <li>Nombre del usuario: <td th:text="${usuario.nombre}"></td> </li>
+            <li>Email del usuario: <td th:text="${usuario.email}"></td> </li>
+            <li>Fecha de nacimiento del usuario: <td th:text="${usuario.fechaNacimiento}"></td> </li>
+        </ul>
+        <a class="btn btn-primary btn-xs" th:href="@{/usuarios}"/>Volver atrás</a>
+    </div>
+
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>

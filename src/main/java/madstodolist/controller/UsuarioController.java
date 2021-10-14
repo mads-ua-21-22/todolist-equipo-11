@@ -42,4 +42,26 @@ public class UsuarioController {
         model.addAttribute("usuarios", usuarios);
         return "usuarios";
     }
+
+    @GetMapping("/usuarios/{id}")
+    public String descripcionUsuario(@PathVariable(value="id") Long id, Model model, HttpSession session) {
+       //Para comprobar si el usuario si existe y si esta logeado (Evitar error null)
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+
+        managerUserSession.comprobarExisteUsuario(idUsuario);
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+        //Comprobamos usuario de la SESION
+        Usuario usuarioSesion = usuarioService.findById(idUsuario);
+        if (usuarioSesion == null) {
+            throw new UsuarioNotFoundException();
+        }
+        //Usuario del id que se busca
+        Usuario usuario = usuarioService.findById(id);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        model.addAttribute("usuarioSesion",usuarioSesion);
+        model.addAttribute("usuario",usuario);
+        return "descripcion";
+    }
 }
