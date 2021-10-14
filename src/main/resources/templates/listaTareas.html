@@ -4,8 +4,8 @@
 <head th:replace="fragments :: head (titulo='Login')"></head>
 
     <body>
-    <header th:insert="/navbar.html :: header"> </header>
-º
+    <header th:replace="/navbar.html :: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
+
     <div class="container-fluid">
 
         <div class="row mt-3">
