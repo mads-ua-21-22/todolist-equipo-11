@@ -68,6 +68,7 @@ public class UsuarioService {
     }
 
 
+
     @Transactional(readOnly = true)
     public Usuario findByEmail(String email) {
         return usuarioRepository.findByEmail(email).orElse(null);

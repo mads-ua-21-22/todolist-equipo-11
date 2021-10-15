@@ -121,4 +121,22 @@ public class UsuarioWebTest {
                 .andExpect(content().string(containsString("1")));
         ;
     }
+
+    @Test
+    public void servicioDescripciónUsuarioError() throws Exception {
+        this.mockMvc.perform(get("/usuarios/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void servicioDescripcionUsuario() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+
+        when(usuarioService.findById(1L)).thenReturn(usuario);
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/usuarios/1"))
+                .andExpect(content().string(containsString("domingo@ua.es")));
+    }
 }
