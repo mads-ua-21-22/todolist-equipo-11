@@ -39,6 +39,11 @@
                                    placeholder="01-12-2019" th:field="*{fechaNacimiento}"/>
                         </div>
 
+                        <div class="form-group">
+                            <label for="administrador">Administrador</label>
+                            <input type="checkbox" name="mycheckbox" id="administrador" th:field="*{administrador}" th:value="true"/>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Registro</button>
                         <a class="btn btn-link" href="/login">Ir a login</a>
                     </div>
