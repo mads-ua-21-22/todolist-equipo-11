@@ -67,6 +67,11 @@ public class UsuarioService {
         return usuarios;
     }
 
+    @Transactional(readOnly = true)
+    public Boolean existeAdmin() {
+
+        return false;
+    }
 
 
     @Transactional(readOnly = true)

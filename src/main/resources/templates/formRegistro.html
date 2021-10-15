@@ -39,7 +39,7 @@
                                    placeholder="01-12-2019" th:field="*{fechaNacimiento}"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" th:if="${hayadmin == false}">
                             <label for="administrador">Administrador</label>
                             <input type="checkbox" name="mycheckbox" id="administrador" th:field="*{administrador}" th:value="true"/>
                         </div>

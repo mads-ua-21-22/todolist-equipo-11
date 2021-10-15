@@ -60,6 +60,7 @@ public class LoginController {
     @GetMapping("/registro")
     public String registroForm(Model model) {
         model.addAttribute("registroData", new RegistroData());
+        model.addAttribute("hayadmin",usuarioService.existeAdmin());
         return "formRegistro";
     }
 
