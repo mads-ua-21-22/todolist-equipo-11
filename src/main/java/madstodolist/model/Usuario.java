@@ -22,6 +22,8 @@ public class Usuario implements Serializable {
     private String nombre;
     private String password;
     private Boolean administrador;
+    private Boolean bloqueado = false;
+
     @Column(name = "fecha_nacimiento")
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
@@ -99,6 +101,14 @@ public class Usuario implements Serializable {
 
     public void setAdministrador(Boolean administrador) {
         this.administrador = administrador;
+    }
+
+    public Boolean getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(Boolean bloqueado) {
+        this.bloqueado = bloqueado;
     }
 
     @Override
