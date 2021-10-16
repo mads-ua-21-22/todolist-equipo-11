@@ -78,7 +78,7 @@ Esta barra de menú aparece en todas las vistas excepto en las de Login, Registr
 ```
 Para que este menu aparezca en el resto de vistas, hay que insertarlo con el id del usuario y su nombre como parametro para poder mostrar los datos requeridos:
 ```javascript
-    <header th:replace="/navbar.html :: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
+<header th:replace="fragments :: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
 ```
 ### Listado de Usuarios
 En */usuarios* se nos muetra un listado de todos los usuarios donde podemos observar su Id y Email.
@@ -126,7 +126,7 @@ public List<Usuario> allUsuarios() {
 La vista relacionada con esta funcionalidad sería usuarios.html:
 ```javascript
    <body>
-    <header th:replace="/navbar.html :: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
+    <header th:replace="fragments :: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
 
     <div class="container-fluid">
         <div class="row mt-3">
