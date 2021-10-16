@@ -99,10 +99,21 @@ public class UsuarioWebTest {
     }
 
     @Test
+    public void servicioAllUsuariosNotAdmin() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(false);
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/usuarios"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void servicioAllUsuarios() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
-
+        usuario.setAdministrador(true);
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/usuarios"))
@@ -113,6 +124,7 @@ public class UsuarioWebTest {
     public void servicioAllUsuarios2() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
+        usuario.setAdministrador(true);
         List<Usuario> usuarios = new ArrayList<>();
         usuarios.add(usuario);
         when(usuarioService.findById(null)).thenReturn(usuario);
@@ -134,7 +146,7 @@ public class UsuarioWebTest {
     public void servicioDescripcionUsuario() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
-
+        usuario.setAdministrador(true);
         when(usuarioService.findById(1L)).thenReturn(usuario);
         when(usuarioService.findById(null)).thenReturn(usuario);
 

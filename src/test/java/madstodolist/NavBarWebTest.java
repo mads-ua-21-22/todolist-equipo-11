@@ -33,7 +33,7 @@ public class NavBarWebTest {
     public void navBarTest1() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
-
+        usuario.setAdministrador(true);
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/usuarios"))
@@ -44,6 +44,7 @@ public class NavBarWebTest {
     public void navBarTest2() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
+        usuario.setAdministrador(true);
 
         when(usuarioService.findById(null)).thenReturn(usuario);
 
