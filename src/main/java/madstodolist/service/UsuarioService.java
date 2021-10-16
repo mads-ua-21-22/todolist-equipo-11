@@ -1,7 +1,6 @@
 package madstodolist.service;
 
 import madstodolist.controller.exception.UsuarioNotFoundException;
-import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.model.UsuarioRepository;
 import org.slf4j.Logger;
@@ -79,6 +78,21 @@ public class UsuarioService {
         return false;
     }
 
+    @Transactional
+    public void cambiaEstadoBloqueado(Long usuario_id) {
+        Usuario usuario = usuarioRepository.findById(usuario_id).orElse(null);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+
+        if(usuario.getBloqueado() == false) {
+            usuario.setBloqueado(true);
+        } else {
+            usuario.setBloqueado(false);
+        }
+        usuarioRepository.save(usuario);
+    }
 
     @Transactional(readOnly = true)
     public Usuario findByEmail(String email) {
