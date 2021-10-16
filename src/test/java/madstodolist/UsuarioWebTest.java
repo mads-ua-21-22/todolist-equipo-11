@@ -39,6 +39,7 @@ public class UsuarioWebTest {
 
         Usuario anaGarcia = new Usuario("ana.garcia@gmail.com");
         anaGarcia.setId(1L);
+        anaGarcia.setAdministrador(false);
 
         when(usuarioService.login("ana.garcia@gmail.com", "12345678"))
                 .thenReturn(UsuarioService.LoginStatus.LOGIN_OK);
@@ -48,6 +49,7 @@ public class UsuarioWebTest {
         this.mockMvc.perform(post("/login")
                 .param("eMail", "ana.garcia@gmail.com")
                 .param("password", "12345678"))
+
                 //.andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/usuarios/1/tareas"));
