@@ -18,7 +18,6 @@ Para la realización de esta práctica se ha trabajado sobretodo sobre una metod
 
 ## *Listado de nuevas plantillas*
 * about.html
-* navbar.html
 * usuarios.html
 * descripcion.html
 
@@ -41,6 +40,9 @@ El código principal del mismo es el siguiente:
 ```
 ### NavBar
 El NavBar es una barra de menú bastante sencilla que nos permitirá el acceso a Acerca de, al listado de tareas y tendrá un Dropdown para poder acceder a la cuenta en un futuro y cerrar la sesión.
+
+Este codigo aparece en fragments.html.
+
 Esta barra de menú aparece en todas las vistas excepto en las de Login, Registro y Acerca de.
 ```javascript
 <div th:fragment="header">
