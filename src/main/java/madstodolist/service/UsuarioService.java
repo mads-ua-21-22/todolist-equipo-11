@@ -69,7 +69,13 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public Boolean existeAdmin() {
-
+        List<Usuario> usuarios = new ArrayList<>();
+        usuarioRepository.findAll().forEach(usuarios::add);
+        for(Usuario user : usuarios)
+        {
+            if(user.getAdministrador() == true)
+                return true;
+        }
         return false;
     }
 
