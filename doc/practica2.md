@@ -1,10 +1,11 @@
 # Practica 1
 
 ## Repositorios
-[Repositorios en Docker](https://hub.docker.com/repository/docker/dargue94/spring-boot-demoapp)
+[Repositorios en Docker](https://hub.docker.com/repository/docker/dargue94/mads-todolist)
 
 [Github](https://github.com/mads-ua-21-22/mads-todolist-dargue94)
 
+[Trello](https://trello.com/b/SVVvfCcB/todolist-mads)
 ## *Resumen*
 En esta práctica se ha realizado una pequeña web que nos permitirá gestionar los usuarios.
 Podemos encontrar el rol de administrador que nos permitirá bloquear y desbloquear usuarios y es el único usuario que puede acceder al listado de los mismos.
