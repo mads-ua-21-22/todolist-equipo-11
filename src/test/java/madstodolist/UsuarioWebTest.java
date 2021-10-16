@@ -39,6 +39,7 @@ public class UsuarioWebTest {
 
         Usuario anaGarcia = new Usuario("ana.garcia@gmail.com");
         anaGarcia.setId(1L);
+        anaGarcia.setAdministrador(false);
 
         when(usuarioService.login("ana.garcia@gmail.com", "12345678"))
                 .thenReturn(UsuarioService.LoginStatus.LOGIN_OK);
@@ -48,6 +49,7 @@ public class UsuarioWebTest {
         this.mockMvc.perform(post("/login")
                 .param("eMail", "ana.garcia@gmail.com")
                 .param("password", "12345678"))
+
                 //.andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/usuarios/1/tareas"));
@@ -97,10 +99,21 @@ public class UsuarioWebTest {
     }
 
     @Test
+    public void servicioAllUsuariosNotAdmin() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(false);
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/usuarios"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void servicioAllUsuarios() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
-
+        usuario.setAdministrador(true);
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/usuarios"))
@@ -111,6 +124,7 @@ public class UsuarioWebTest {
     public void servicioAllUsuarios2() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
+        usuario.setAdministrador(true);
         List<Usuario> usuarios = new ArrayList<>();
         usuarios.add(usuario);
         when(usuarioService.findById(null)).thenReturn(usuario);
@@ -129,10 +143,24 @@ public class UsuarioWebTest {
     }
 
     @Test
+    public void servicioDescripciónUsuarioNotAdmin() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(false);
+        List<Usuario> usuarios = new ArrayList<>();
+        usuarios.add(usuario);
+        when(usuarioService.findById(null)).thenReturn(usuario);
+        when(usuarioService.allUsuarios()).thenReturn(usuarios);
+
+        this.mockMvc.perform(get("/usuarios/1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void servicioDescripcionUsuario() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
-
+        usuario.setAdministrador(true);
         when(usuarioService.findById(1L)).thenReturn(usuario);
         when(usuarioService.findById(null)).thenReturn(usuario);
 
