@@ -43,13 +43,12 @@ public class LoginController {
 
         if (loginStatus == UsuarioService.LoginStatus.LOGIN_OK) {
             Usuario usuario = usuarioService.findByEmail(loginData.geteMail());
-
-            managerUserSession.logearUsuario(session, usuario.getId());
             if (usuario.getBloqueado() == true){
                 model.addAttribute("error", "El usuario ha sido bloqueado");
                 return "formLogin";
             }
-            else if(usuario.getAdministrador() == true)
+            managerUserSession.logearUsuario(session, usuario.getId());
+            if(usuario.getAdministrador() == true)
                 return "redirect:/usuarios/";
             return "redirect:/usuarios/" + usuario.getId() + "/tareas";
         } else if (loginStatus == UsuarioService.LoginStatus.USER_NOT_FOUND) {
@@ -59,7 +58,6 @@ public class LoginController {
             model.addAttribute("error", "Contraseña incorrecta");
             return "formLogin";
         }
-
         return "formLogin";
     }
 

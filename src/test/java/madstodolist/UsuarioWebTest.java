@@ -167,4 +167,21 @@ public class UsuarioWebTest {
         this.mockMvc.perform(get("/usuarios/1"))
                 .andExpect(content().string(containsString("domingo@ua.es")));
     }
+
+    @Test
+    public void servicioUsuarioBloqueadoLogin() throws Exception {
+        Usuario anaGarcia = new Usuario("ana.garcia@gmail.com");
+        anaGarcia.setId(1L);
+        anaGarcia.setBloqueado(true);
+
+        when(usuarioService.login("ana.garcia@gmail.com", "12345678"))
+                .thenReturn(UsuarioService.LoginStatus.LOGIN_OK);
+        when(usuarioService.findByEmail("ana.garcia@gmail.com"))
+                .thenReturn(anaGarcia);
+
+        this.mockMvc.perform(post("/login")
+                        .param("eMail", "ana.garcia@gmail.com")
+                        .param("password", "12345678"))
+                .andExpect(content().string(containsString("El usuario ha sido bloqueado")));
+    }
 }
