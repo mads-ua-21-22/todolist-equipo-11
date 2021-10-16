@@ -43,7 +43,10 @@ public class LoginController {
 
         if (loginStatus == UsuarioService.LoginStatus.LOGIN_OK) {
             Usuario usuario = usuarioService.findByEmail(loginData.geteMail());
-
+            if (usuario.getBloqueado() == true){
+                model.addAttribute("error", "El usuario ha sido bloqueado");
+                return "formLogin";
+            }
             managerUserSession.logearUsuario(session, usuario.getId());
             if(usuario.getAdministrador() == true)
                 return "redirect:/usuarios/";

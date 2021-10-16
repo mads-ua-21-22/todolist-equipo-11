@@ -15,6 +15,7 @@
                     <th>Id</th>
                     <th>Email</th>
                     <th>Descripción</th>
+                    <th>Acción</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -23,6 +24,12 @@
                     <td th:text="${usuario.email}"></td>
                     <td>
                         <a class="btn btn-primary btn-xs" th:href="@{/usuarios/{id}/(id=${usuario.id})}"/>Ver más</a>
+                    </td>
+                    <td>
+                        <form th:action="@{/bloquear/{id}(id=${usuario.id})}" method="post">
+                            <button th:if="${usuario.bloqueado == false}" class="btn btn-danger btn-xs" >Bloquear</button>
+                            <button th:if="${usuario.bloqueado == true}" class="btn btn-danger btn-xs"  >Desbloquear</button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>

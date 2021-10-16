@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -70,5 +72,11 @@ public class UsuarioController {
         model.addAttribute("usuarioSesion",usuarioSesion);
         model.addAttribute("usuario",usuario);
         return "descripcion";
+    }
+
+    @PostMapping("/bloquear/{id}")
+    public String cambiaBloqueado(@PathVariable(value="id") Long id,Model model, HttpSession session) {
+        usuarioService.cambiaEstadoBloqueado(id);
+        return "redirect:/usuarios";
     }
 }
