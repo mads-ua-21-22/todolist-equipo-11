@@ -221,7 +221,8 @@ He comenzado añadiendo el atributo tanto a RegisterData como al Objeto usuario.
 
 De esta forma se crea tambien su Get y Set.
 ```javascript
-    private Boolean administrador;
+private Boolean administrador = false;
+
 public Boolean getAdministrador() {
     return administrador;
 }

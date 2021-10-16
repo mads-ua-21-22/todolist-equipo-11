@@ -10,7 +10,7 @@ public class RegistroData {
     private String eMail;
     private String password;
     private String nombre;
-    private Boolean administrador;
+    private Boolean administrador = false;
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date fechaNacimiento;
 

@@ -21,7 +21,7 @@ public class Usuario implements Serializable {
     private String email;
     private String nombre;
     private String password;
-    private Boolean administrador;
+    private Boolean administrador = false;
     private Boolean bloqueado = false;
 
     @Column(name = "fecha_nacimiento")
