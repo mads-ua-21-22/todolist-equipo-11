@@ -37,7 +37,7 @@ public class NavBarWebTest {
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/usuarios"))
-                .andExpect(content().string(containsString("Tareaas")));
+                .andExpect(content().string(containsString("Tareas")));
     }
 
     @Test
