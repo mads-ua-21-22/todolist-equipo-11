@@ -20,9 +20,12 @@ public class Equipo implements Serializable {
     @NotNull
     private String nombre;
 
-    @ManyToMany
-    Set<Usuario> usuario;
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "equipo_usuario",
+            joinColumns = @JoinColumn(name = "fk_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "fk_equipo"))
+    Set<Usuario> usuarios = new HashSet<>();
     // Constructor público con los atributos obligatorios. En este caso el correo electrónico.
     public Equipo(String nombre) {
         this.nombre = nombre;
@@ -45,6 +48,10 @@ public class Equipo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<Usuario> getUsuario() {
+        return usuarios;
     }
 
     @Override
