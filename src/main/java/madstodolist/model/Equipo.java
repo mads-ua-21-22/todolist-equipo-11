@@ -20,6 +20,9 @@ public class Equipo implements Serializable {
     @NotNull
     private String nombre;
 
+    @ManyToMany
+    Set<Usuario> usuario;
+
     // Constructor público con los atributos obligatorios. En este caso el correo electrónico.
     public Equipo(String nombre) {
         this.nombre = nombre;
