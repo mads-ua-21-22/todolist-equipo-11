@@ -35,6 +35,14 @@ public class Equipo implements Serializable {
         this.nombre = nombre;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(String Id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
