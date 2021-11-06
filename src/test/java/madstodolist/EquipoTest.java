@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -71,5 +74,15 @@ public class EquipoTest {
         assertThat(equipo.getNombre()).isEqualTo("Proyecto P1");
     }
 
+    @Test
+    public void comprobarFindAll() {
+        // GIVEN
+        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
 
+        // WHEN
+        List<Equipo> equipos = equipoRepository.findAll();
+
+        // THEN
+        assertThat(equipos).hasSize(2);
+    }
 }
