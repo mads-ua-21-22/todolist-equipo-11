@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "equipos")
 public class Equipo implements Serializable {
 
     private static final long serialVersionUID = 1L;

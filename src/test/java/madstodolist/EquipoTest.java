@@ -56,4 +56,20 @@ public class EquipoTest {
         assertThat(equipo2).isNotEqualTo(equipo3);
     }
 
+    @Test
+    public void comprobarRecuperarEquipo() {
+        // GIVEN
+        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
+
+        // WHEN
+
+        Equipo equipo = equipoRepository.findById(1L).orElse(null);
+
+        // THEN
+        assertThat(equipo).isNotNull();
+        assertThat(equipo.getId()).isEqualTo(1L);
+        assertThat(equipo.getNombre()).isEqualTo("Proyecto P1");
+    }
+
+
 }
