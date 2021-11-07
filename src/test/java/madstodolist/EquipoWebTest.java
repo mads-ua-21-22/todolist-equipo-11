@@ -1,7 +1,9 @@
 package madstodolist;
 
 import madstodolist.authentication.ManagerUserSession;
+import madstodolist.model.Equipo;
 import madstodolist.model.Usuario;
+import madstodolist.service.EquipoService;
 import madstodolist.service.UsuarioService;
 import madstodolist.service.UsuarioServiceException;
 import org.junit.jupiter.api.Assertions;
@@ -15,11 +17,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,11 +35,13 @@ public class EquipoWebTest {
     private MockMvc mockMvc;
     @MockBean
     private UsuarioService usuarioService;
+    @MockBean
+    private EquipoService equipoService;
     // Al mocker el manegerUserSession, no lanza la excepción cuando
     // se intenta comprobar si un usuario está logeado
     @MockBean
     private ManagerUserSession managerUserSession;
-    
+
     @Test
     public void listadoDeEquipos() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
@@ -61,8 +70,14 @@ public class EquipoWebTest {
         Usuario usuario = new Usuario("domingo@ua.es");
         usuario.setId(1L);
         usuario.setAdministrador(true);
-
+        List<Equipo> equipos = new ArrayList<>();
+        Equipo equipo = new Equipo("Nombre");
+        equipo.addUsuario(usuario);
+        equipos.add(equipo);
         when(usuarioService.findById(null)).thenReturn(usuario);
+        when(equipoService.findById(1L)).thenReturn(equipo);
+
+        when(equipoService.findAllOrderedByName()).thenReturn(equipos);
 
         this.mockMvc.perform(get("/equipos/1"))
                 .andExpect(content().string(containsString("Listado de usuarios que componen el equipo")));
@@ -90,4 +105,34 @@ public class EquipoWebTest {
         this.mockMvc.perform(get("/equipos/crear"))
                 .andExpect(content().string(containsString("Creando nuevo equipo")));
     }
+    @Test
+    @Transactional
+    public void agregaAEquipo() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(post("/equipos/1/agregar"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/equipos"));
+    }
+
+    @Test
+    @Transactional
+    public void borrarmeDeEquipo() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(delete("/equipos/1"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(containsString("")));
+    }
+
 }

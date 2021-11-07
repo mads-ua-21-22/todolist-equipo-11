@@ -11,10 +11,7 @@ import madstodolist.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -59,6 +56,11 @@ public class EquipoController {
 
         List<Usuario> usuarios = equipoService.usuariosEquipo(idEquipo);
 
+        boolean aparezco = false;
+        if(equipo.getUsuarios().contains(usuario))
+            aparezco=true;
+
+        model.addAttribute("aparezco", aparezco);
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("equipo", equipo);
@@ -94,5 +96,40 @@ public class EquipoController {
         equipoService.crearEquipo(equipoData.getNombre());
         flash.addFlashAttribute("mensaje", "Equipo cread correctamente");
         return "redirect:/equipos";
+    }
+
+    @PostMapping("/equipos/{id}/agregar")
+    public String agregarmeAEquipo(@PathVariable(value="id") Long idEquipo,
+                             Model model, RedirectAttributes flash,
+                             HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        equipoService.agregarAEquipo(idUsuario,idEquipo);
+
+        flash.addFlashAttribute("mensaje", "Agregado al equipo correctamente");
+        return "redirect:/equipos";
+    }
+
+    @DeleteMapping("/equipos/{id}")
+    @ResponseBody
+    public String borrarmedeEquipo(@PathVariable(value="id") Long idEquipo,
+                                   Model model, RedirectAttributes flash,
+                                   HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        equipoService.eliminarDeEquipo(idUsuario,idEquipo);
+
+        flash.addFlashAttribute("mensaje", "Eliminado del equipo correctamente");
+        return "";
     }
 }
