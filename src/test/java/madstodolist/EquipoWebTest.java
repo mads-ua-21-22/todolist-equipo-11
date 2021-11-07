@@ -39,4 +39,16 @@ public class EquipoWebTest {
         this.mockMvc.perform(get("/equipos"))
                 .andExpect(content().string(containsString("Equipos")));
     }
+
+    @Test
+    public void verEquiposApareceNavBar() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/equipos"))
+                .andExpect(content().string(containsString("Ver equipos")));
+    }
 }
