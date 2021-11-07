@@ -135,4 +135,18 @@ public class EquipoWebTest {
                 .andExpect(content().string(containsString("")));
     }
 
+    @Test
+    @Transactional
+    public void borrarEquipo() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(delete("/equipo/1"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(containsString("")));
+    }
 }
