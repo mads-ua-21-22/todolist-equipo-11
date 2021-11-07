@@ -5,6 +5,8 @@ import madstodolist.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,4 +33,12 @@ public class EquipoService {
         return equipo;
     }
 
+    @Transactional(readOnly = true)
+    public List<Usuario> usuariosEquipo(Long idEquipo) {
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+
+        List<Usuario> usuarios = new ArrayList(equipo.getUsuarios());
+        Collections.sort(usuarios, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
+        return usuarios;
+    }
 }
