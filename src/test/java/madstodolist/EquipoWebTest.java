@@ -51,4 +51,15 @@ public class EquipoWebTest {
         this.mockMvc.perform(get("/equipos"))
                 .andExpect(content().string(containsString("Equipos")));
     }
+    @Test
+    public void infoDelEquipo() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/equipos/1"))
+                .andExpect(content().string(containsString("Listado de usuarios que componen el equipo")));
+    }
 }
