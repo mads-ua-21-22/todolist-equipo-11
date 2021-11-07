@@ -134,4 +134,13 @@ public class EquipoServiceTest {
         equipoService.editarNombreEquipo("No es su nombre",1L);
         assertThat(equipo.getNombre()).matches("No es su nombre");
     }
+    @Test
+    @Transactional
+    public void borrarEquipo() {
+        List<Equipo> equipos = equipoService.findAllOrderedByName();
+        assertThat(equipos).hasSize(2);
+        equipoService.borrarEquipo(1L);
+        List<Equipo> equipos2 = equipoService.findAllOrderedByName();
+        assertThat(equipos2).hasSize(1);
+    }
 }

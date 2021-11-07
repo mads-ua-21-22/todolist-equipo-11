@@ -70,4 +70,9 @@ public class EquipoService {
         equipo.setNombre(nombreEquipo);
         return equipo;
     }
+    @Transactional
+    public void borrarEquipo(Long idEquipo) {
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        equipoRepository.delete(equipo);
+    }
 }
