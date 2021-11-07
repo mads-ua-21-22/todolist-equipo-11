@@ -87,4 +87,14 @@ public class EquipoServiceTest {
         // Y después que el elemento es el equipo Proyecto P1
         assertThat(usuarios.get(0).getEquipos().stream().findFirst().get().getNombre()).isEqualTo("Proyecto P1");
     }
+
+    @Test
+    public void creaEquipos() {
+        List<Equipo> equipos = equipoService.findAllOrderedByName();
+        // THEN
+        assertThat(equipos).hasSize(2);
+        equipoService.crearEquipo("equipoTest");
+        equipos = equipoService.findAllOrderedByName();
+        assertThat(equipos).hasSize(3);
+    }
 }

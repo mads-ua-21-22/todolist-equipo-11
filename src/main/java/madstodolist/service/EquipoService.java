@@ -41,4 +41,11 @@ public class EquipoService {
         Collections.sort(usuarios, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
         return usuarios;
     }
+
+    @Transactional
+    public Equipo crearEquipo(String nombreEquipo) {
+        Equipo equipo = new Equipo(nombreEquipo);
+        equipoRepository.save(equipo);
+        return equipo;
+    }
 }
