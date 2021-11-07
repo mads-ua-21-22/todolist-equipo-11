@@ -102,6 +102,8 @@ public class EquipoTest {
         // THEN
         assertThat(equipo.getUsuarios()).contains(usuario);
         assertThat(usuario.getEquipos()).contains(equipo);
+        //Para que no peten los tests automaticos
+        equipo.deleteUsuario(usuario);
     }
     @Test
     @Transactional
@@ -117,5 +119,7 @@ public class EquipoTest {
         // THEN
         assertThat(equipo.getUsuarios()).doesNotContain(usuario);
         assertThat(usuario.getEquipos()).doesNotContain(equipo);
+        //Para que no peten los tests automaticos
+        equipo.addUsuario(usuario);
     }
 }

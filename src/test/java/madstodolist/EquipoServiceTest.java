@@ -107,6 +107,8 @@ public class EquipoServiceTest {
         Equipo equipo2 = equipoService.findById(2L);
         assertThat(equipo.getUsuarios()).contains(usuario);
         assertThat(equipo2.getUsuarios()).contains(usuario);
+        //Para que no pete ejecucion de tests automaticos...
+        equipoService.eliminarDeEquipo(1L, 2L);
     }
 
     @Test
@@ -120,5 +122,6 @@ public class EquipoServiceTest {
         Equipo equipo2 = equipoService.findById(2L);
         assertThat(equipo.getUsuarios()).doesNotContain(usuario);
         assertThat(equipo2.getUsuarios()).doesNotContain(usuario);
+        equipoService.agregarAEquipo(1L, 1L);
     }
 }
