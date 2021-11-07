@@ -1,22 +1,22 @@
 package madstodolist.service;
 
-import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EquipoService {
 
     private EquipoRepository equipoRepository;
 
-    public EquipoService(EquipoRepository equipoRepository) {
+    private UsuarioRepository usuarioRepository;
+
+    public EquipoService(UsuarioRepository usuarioRepository, EquipoRepository equipoRepository) {
         this.equipoRepository = equipoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional(readOnly = true)
@@ -46,6 +46,14 @@ public class EquipoService {
     public Equipo crearEquipo(String nombreEquipo) {
         Equipo equipo = new Equipo(nombreEquipo);
         equipoRepository.save(equipo);
+        return equipo;
+    }
+
+    @Transactional
+    public Equipo agregarAEquipo(Long idUsuario, Long idEquipo) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        equipo.addUsuario(usuario);
         return equipo;
     }
 }

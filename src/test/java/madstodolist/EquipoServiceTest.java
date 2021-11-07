@@ -7,12 +7,10 @@ import madstodolist.service.EquipoService;
 import madstodolist.service.UsuarioService;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -96,5 +94,18 @@ public class EquipoServiceTest {
         equipoService.crearEquipo("equipoTest");
         equipos = equipoService.findAllOrderedByName();
         assertThat(equipos).hasSize(3);
+    }
+
+    @Test
+    @Transactional
+    public void addUsuarioEquipo() {
+        Usuario usuario = usuarioService.findById(1L);
+        assertThat(usuario.getEquipos()).hasSize(1);
+        equipoService.agregarAEquipo(1L, 2L);
+        assertThat(usuario.getEquipos()).hasSize(2);
+        Equipo equipo = equipoService.findById(1L);
+        Equipo equipo2 = equipoService.findById(2L);
+        assertThat(equipo.getUsuarios()).contains(usuario);
+        assertThat(equipo2.getUsuarios()).contains(usuario);
     }
 }
