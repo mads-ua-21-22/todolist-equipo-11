@@ -1,5 +1,6 @@
 package madstodolist.service;
 
+import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,13 @@ public class EquipoService {
         List<Equipo> equipos = equipoRepository.findAll();
         equipos.sort(Comparator.comparing(Equipo::getNombre));
         return equipos;
+    }
+
+    @Transactional
+    public Equipo findById(Long id) {
+        Equipo equipo = equipoRepository.findById(id).orElse(null);
+
+        return equipo;
     }
 
 }
