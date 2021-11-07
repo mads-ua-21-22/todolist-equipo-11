@@ -26,8 +26,15 @@
                     <tr th:each="usuario: ${usuarios}">
                         <td th:text="${usuario.nombre}"></td>
                     </tr>
+
+
                     </tbody>
                 </table>
+                <form th:action="@{/equipos/{id}/agregar(id=${equipo.id})}" method="post">
+                    <button class="btn btn-primary" th:if="${aparezco == false}" >Agregarme</button>
+                </form>
+                <button th:if="${aparezco == true}" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                        th:onclick="'del(\'/equipos/' + ${equipo.id} + '\')'">Borrarme</button>
 
             </div>
         </div>
@@ -40,6 +47,15 @@
     <div th:replace="fragments::javascript"/>
 
     <!-- Lanzamos una petición DELETE por JavaScript para borrar una tarea -->
+    <script type="text/javascript">
+        function del(urlBorrar) {
+            if (confirm('¿Estás seguro/a de que quieres borrarte del equipo?')) {
+                fetch(urlBorrar, {
+                    method: 'DELETE'
+                }).then((res) => location.reload());
+            }
+        }
+    </script>
 
 </body>
 </html>
