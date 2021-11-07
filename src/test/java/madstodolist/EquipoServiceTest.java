@@ -87,6 +87,7 @@ public class EquipoServiceTest {
     }
 
     @Test
+    @Transactional
     public void creaEquipos() {
         List<Equipo> equipos = equipoService.findAllOrderedByName();
         // THEN
