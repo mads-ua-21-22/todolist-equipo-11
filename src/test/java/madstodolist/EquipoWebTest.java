@@ -37,7 +37,7 @@ public class EquipoWebTest {
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/equipos"))
-                .andExpect(content().string(containsString("Equipos")));
+                .andExpect(content().string(containsString("Listado de equipos")));
     }
 
     @Test
@@ -49,6 +49,6 @@ public class EquipoWebTest {
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/equipos"))
-                .andExpect(content().string(containsString("Ver equipos")));
+                .andExpect(content().string(containsString("Equipos")));
     }
 }
