@@ -125,4 +125,13 @@ public class EquipoServiceTest {
         assertThat(equipo2.getUsuarios()).doesNotContain(usuario);
         equipoService.agregarAEquipo(1L, 1L);
     }
+
+    @Test
+    @Transactional
+    public void editarNombreEquipo() {
+        Equipo equipo = equipoService.findById(1L);
+        assertThat(equipo.getNombre()).doesNotMatch("No es su nombre");
+        equipoService.editarNombreEquipo("No es su nombre",1L);
+        assertThat(equipo.getNombre()).matches("No es su nombre");
+    }
 }

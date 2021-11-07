@@ -64,4 +64,10 @@ public class EquipoService {
         equipo.deleteUsuario(usuario);
         return equipo;
     }
+    @Transactional
+    public Equipo editarNombreEquipo(String nombreEquipo, Long idEquipo) {
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        equipo.setNombre(nombreEquipo);
+        return equipo;
+    }
 }
