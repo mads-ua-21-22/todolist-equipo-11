@@ -2,7 +2,9 @@ package madstodolist;
 
 
 import madstodolist.model.Equipo;
+import madstodolist.model.Usuario;
 import madstodolist.service.EquipoService;
+import madstodolist.service.UsuarioService;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,9 @@ public class EquipoServiceTest {
 
     @Autowired
     EquipoService equipoService;
+
+    @Autowired
+    UsuarioService usuarioService;
 
     @Test
     public void obtenerListadoEquipos() {
@@ -50,6 +55,19 @@ public class EquipoServiceTest {
         assertThatThrownBy(() -> {
             equipo.getUsuarios().size();
         }).isInstanceOf(LazyInitializationException.class);
+    }
+
+    @Test
+    public void comprobarRelacionUsuarioEquipos() {
+        // GIVEN
+        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
+
+        // WHEN
+        Usuario usuario = usuarioService.findById(1L);
+
+        // THEN
+
+        assertThat(usuario.getEquipos()).hasSize(1);
     }
 
 }
