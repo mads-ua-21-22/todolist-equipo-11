@@ -1,5 +1,6 @@
 package madstodolist;
 
+import madstodolist.authentication.ManagerUserSession;
 import madstodolist.model.Usuario;
 import madstodolist.service.UsuarioService;
 import madstodolist.service.UsuarioServiceException;
@@ -27,7 +28,11 @@ public class EquipoWebTest {
     private MockMvc mockMvc;
     @MockBean
     private UsuarioService usuarioService;
-
+    // Al mocker el manegerUserSession, no lanza la excepción cuando
+    // se intenta comprobar si un usuario está logeado
+    @MockBean
+    private ManagerUserSession managerUserSession;
+    
     @Test
     public void listadoDeEquipos() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
@@ -61,5 +66,28 @@ public class EquipoWebTest {
 
         this.mockMvc.perform(get("/equipos/1"))
                 .andExpect(content().string(containsString("Listado de usuarios que componen el equipo")));
+    }
+
+    @Test
+    public void apareceBotonEnEquipos() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/equipos"))
+                .andExpect(content().string(containsString("Crear equipo")));
+    }
+    @Test
+    public void vistaCrearEquipo() throws Exception {
+        Usuario usuario = new Usuario("domingo@ua.es");
+        usuario.setId(1L);
+        usuario.setAdministrador(true);
+
+        when(usuarioService.findById(null)).thenReturn(usuario);
+
+        this.mockMvc.perform(get("/equipos/crear"))
+                .andExpect(content().string(containsString("Creando nuevo equipo")));
     }
 }
