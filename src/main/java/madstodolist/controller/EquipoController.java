@@ -23,13 +23,23 @@ public class EquipoController {
 
     @Autowired
     EquipoService equipoService;
-
+    @Autowired
+    UsuarioService usuarioService;
     @Autowired
     ManagerUserSession managerUserSession;
 
     @GetMapping("/equipos")
     public String listadoEquipos(Model model, HttpSession session) {
+
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+
         List<Equipo> equipos = equipoService.findAllOrderedByName();
+        model.addAttribute("usuario", usuario);
         model.addAttribute("equipos", equipos);
         return "equipos";
     }
