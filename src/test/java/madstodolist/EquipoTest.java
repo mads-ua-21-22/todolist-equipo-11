@@ -103,4 +103,19 @@ public class EquipoTest {
         assertThat(equipo.getUsuarios()).contains(usuario);
         assertThat(usuario.getEquipos()).contains(equipo);
     }
+    @Test
+    @Transactional
+    public void borrarUsuarioDeEquipo() {
+        // GIVEN
+        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
+        Usuario usuario = usuarioRepository.findById(1L).orElse(null);
+        Equipo equipo = equipoRepository.findById(1L).orElse(null);
+        assertThat(equipo.getUsuarios()).contains(usuario);
+        assertThat(usuario.getEquipos()).contains(equipo);
+        // WHEN
+        equipo.deleteUsuario(usuario);
+        // THEN
+        assertThat(equipo.getUsuarios()).doesNotContain(usuario);
+        assertThat(usuario.getEquipos()).doesNotContain(equipo);
+    }
 }

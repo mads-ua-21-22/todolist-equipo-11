@@ -74,6 +74,11 @@ public class Equipo implements Serializable {
         usuario.getEquipos().add(this);
     }
 
+    public void deleteUsuario(Usuario usuario) {
+        this.getUsuarios().remove(usuario);
+        usuario.getEquipos().remove(this);
+    }
+
     @Override
     public int hashCode() {
         // Generamos un hash basado en los campos obligatorios
