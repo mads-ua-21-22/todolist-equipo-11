@@ -2,6 +2,8 @@ package madstodolist;
 
 import madstodolist.model.Equipo;
 import madstodolist.model.EquipoRepository;
+import madstodolist.model.Usuario;
+import madstodolist.model.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class EquipoTest {
     }
     @Autowired
     private EquipoRepository equipoRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Test
     @Transactional
@@ -75,6 +79,7 @@ public class EquipoTest {
     }
 
     @Test
+    @Transactional(readOnly = true)
     public void comprobarFindAll() {
         // GIVEN
         // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
@@ -84,5 +89,38 @@ public class EquipoTest {
 
         // THEN
         assertThat(equipos).hasSize(2);
+    }
+
+    @Test
+    @Transactional
+    public void actualizarRelacionUsuarioEquipos() {
+        // GIVEN
+        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
+        Usuario usuario = usuarioRepository.findById(1L).orElse(null);
+        Equipo equipo = equipoRepository.findById(2L).orElse(null);
+        // WHEN
+        equipo.addUsuario(usuario);
+        // THEN
+        assertThat(equipo.getUsuarios()).contains(usuario);
+        assertThat(usuario.getEquipos()).contains(equipo);
+        //Para que no peten los tests automaticos
+        equipo.deleteUsuario(usuario);
+    }
+    @Test
+    @Transactional
+    public void borrarUsuarioDeEquipo() {
+        // GIVEN
+        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
+        Usuario usuario = usuarioRepository.findById(1L).orElse(null);
+        Equipo equipo = equipoRepository.findById(1L).orElse(null);
+        assertThat(equipo.getUsuarios()).contains(usuario);
+        assertThat(usuario.getEquipos()).contains(equipo);
+        // WHEN
+        equipo.deleteUsuario(usuario);
+        // THEN
+        assertThat(equipo.getUsuarios()).doesNotContain(usuario);
+        assertThat(usuario.getEquipos()).doesNotContain(equipo);
+        //Para que no peten los tests automaticos
+        equipo.addUsuario(usuario);
     }
 }

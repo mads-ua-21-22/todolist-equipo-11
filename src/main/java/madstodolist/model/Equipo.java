@@ -69,6 +69,16 @@ public class Equipo implements Serializable {
         return nombre.equals(equipo.nombre);
     }
 
+    public void addUsuario(Usuario usuario) {
+        this.getUsuarios().add(usuario);
+        usuario.getEquipos().add(this);
+    }
+
+    public void deleteUsuario(Usuario usuario) {
+        this.getUsuarios().remove(usuario);
+        usuario.getEquipos().remove(this);
+    }
+
     @Override
     public int hashCode() {
         // Generamos un hash basado en los campos obligatorios
