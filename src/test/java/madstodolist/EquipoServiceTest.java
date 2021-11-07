@@ -108,4 +108,17 @@ public class EquipoServiceTest {
         assertThat(equipo.getUsuarios()).contains(usuario);
         assertThat(equipo2.getUsuarios()).contains(usuario);
     }
+
+    @Test
+    @Transactional
+    public void deleteUsuarioEquipo() {
+        Usuario usuario = usuarioService.findById(1L);
+        assertThat(usuario.getEquipos()).hasSize(1);
+        equipoService.eliminarDeEquipo(1L, 1L);
+        assertThat(usuario.getEquipos()).hasSize(0);
+        Equipo equipo = equipoService.findById(1L);
+        Equipo equipo2 = equipoService.findById(2L);
+        assertThat(equipo.getUsuarios()).doesNotContain(usuario);
+        assertThat(equipo2.getUsuarios()).doesNotContain(usuario);
+    }
 }
