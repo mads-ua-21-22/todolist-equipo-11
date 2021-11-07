@@ -129,7 +129,64 @@ public class EquipoController {
         }
         equipoService.eliminarDeEquipo(idUsuario,idEquipo);
 
-        flash.addFlashAttribute("mensaje", "Eliminado del equipo correctamente");
         return "";
+    }
+
+    @DeleteMapping("/equipo/{id}")
+    @ResponseBody
+    public String borrarEquipo(@PathVariable(value="id") Long idEquipo,
+                                   Model model, RedirectAttributes flash,
+                                   HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        if (!usuario.getAdministrador())
+            throw new UsuarioNoAdminException();
+
+        equipoService.borrarEquipo(idEquipo);
+        return "";
+    }
+
+    @GetMapping("/equipos/{id}/editar")
+    public String formEditarEquipo(@PathVariable(value="id") Long idEquipo,
+            @ModelAttribute EquipoData equipoData, Model model, HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+        Usuario usuario = usuarioService.findById(idUsuario);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        if (!usuario.getAdministrador())
+            throw new UsuarioNoAdminException();
+
+        Equipo equipo = equipoService.findById(idEquipo);
+
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("equipo",equipo);
+        return "formEditarEquipo";
+    }
+
+    @PostMapping("/equipos/{id}/editar")
+    public String editarEquipo(@PathVariable(value="id") Long idEquipo,
+            @ModelAttribute EquipoData equipoData,
+                             Model model,
+                             HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        if (!usuario.getAdministrador())
+            throw new UsuarioNoAdminException();
+        equipoService.editarNombreEquipo(equipoData.getNombre(),idEquipo);
+
+        return "redirect:/equipos";
     }
 }

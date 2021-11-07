@@ -20,13 +20,19 @@
                     <thead>
                     <tr>
                         <th>Equipo</th>
+                        <th th:if="${usuario.getAdministrador()}" >Accion</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="equipo: ${equipos}">
                         <td>
-                         <a th:href="@{/equipos/{id}(id=${equipo.id})}" th:text="${equipo.nombre}"></a>
+                            <a th:href="@{/equipos/{id}(id=${equipo.id})}" th:text="${equipo.nombre}"></a>
                         </td>
+                        <td th:if="${usuario.getAdministrador()}">
+                          <a  class="btn btn-primary btn-xs" th:href="@{/equipos/{id}/editar(id=${equipo.id})}"/>Editar</a>
+                            <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                                th:onclick="'del(\'/equipo/' + ${equipo.id} + '\')'">Borrar equipo</button></td>
+
                     </tr>
                     </tbody>
                 </table>
@@ -42,6 +48,14 @@
     <div th:replace="fragments::javascript"/>
 
     <!-- Lanzamos una petición DELETE por JavaScript para borrar una tarea -->
-
+    <script type="text/javascript">
+        function del(urlBorrar) {
+            if (confirm('¿Estás seguro/a de que quieres borrar el equipo?')) {
+                fetch(urlBorrar, {
+                    method: 'DELETE'
+                }).then((res) => location.reload());
+            }
+        }
+    </script>
 </body>
 </html>
