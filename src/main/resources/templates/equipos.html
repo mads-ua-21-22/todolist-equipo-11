@@ -28,8 +28,11 @@
                         <td>
                             <a th:href="@{/equipos/{id}(id=${equipo.id})}" th:text="${equipo.nombre}"></a>
                         </td>
-                        <td><button th:if="${usuario.getAdministrador()}" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                        <td th:if="${usuario.getAdministrador()}">
+                          <a  class="btn btn-primary btn-xs" th:href="@{/equipos/{id}/editar(id=${equipo.id})}"/>Editar</a>
+                            <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
                                 th:onclick="'del(\'/equipo/' + ${equipo.id} + '\')'">Borrar equipo</button></td>
+
                     </tr>
                     </tbody>
                 </table>
