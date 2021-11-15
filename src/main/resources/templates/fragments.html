@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/usuarios/{id}/tareas(id=${userid})}">Tareas</a>
                 </li>
+                <li class="nav-item" th:if="${usuario.getAdministrador()}">
+                    <a class="nav-link" th:href="@{/usuarios}">Usuarios</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/equipos}">Equipos</a>
                 </li>
