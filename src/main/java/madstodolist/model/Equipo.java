@@ -62,6 +62,10 @@ public class Equipo implements Serializable {
         return descripcion;
     }
 
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
     }

@@ -131,4 +131,15 @@ public class EquipoTest {
 
         assertThat(equipo.getDescripcion()).isEqualTo("");
     }
+
+    @Test
+    public void cambiarDescripcionEquipo() {
+        // Equipo que incialmente tiene un string vacío
+        Equipo equipo = equipoRepository.findById(1L).orElse(null);
+
+        String cambio = "Este es un equipo para los test";
+        equipo.setDescripcion(cambio);
+
+        assertThat(equipo.getDescripcion()).isEqualTo(cambio);
+    }
 }
