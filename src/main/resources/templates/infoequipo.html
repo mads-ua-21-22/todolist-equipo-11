@@ -4,7 +4,7 @@
 <head th:replace="fragments :: head (titulo='Equipos')"></head>
 
     <body>
-    <header th:replace="fragments:: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
+    <header th:replace="fragments:: header (esAdmin=${usuario.getAdministrador()} ,username=${usuario.nombre}, userid=${usuario.id})"> </header>
 
     <div class="container-fluid">
 
