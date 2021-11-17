@@ -68,7 +68,7 @@ public class EquipoController {
     }
 
     @GetMapping("/equipos/crear")
-    public String formcrearEquipo(@ModelAttribute EquipoData equipoData, Model model, HttpSession session) {
+    public String formcrearEquipo(Model model, HttpSession session) {
         Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
         managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
         Usuario usuario = usuarioService.findById(idUsuario);
@@ -76,7 +76,7 @@ public class EquipoController {
         if (usuario == null) {
             throw new UsuarioNotFoundException();
         }
-
+        model.addAttribute("equipoData", new EquipoData());
         model.addAttribute("usuario", usuario);
 
         return "formCreaEquipo";
@@ -156,7 +156,7 @@ public class EquipoController {
 
     @GetMapping("/equipos/{id}/editar")
     public String formEditarEquipo(@PathVariable(value="id") Long idEquipo,
-            @ModelAttribute EquipoData equipoData, Model model, HttpSession session) {
+                                   Model model, HttpSession session) {
         Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
         managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
         Usuario usuario = usuarioService.findById(idUsuario);
@@ -168,7 +168,10 @@ public class EquipoController {
             throw new UsuarioNoAdminException();
 
         Equipo equipo = equipoService.findById(idEquipo);
+        EquipoData equipoData = new EquipoData();
+        equipoData.setNombre(equipo.getNombre()); equipoData.setDescripcion(equipo.getDescripcion());
 
+        model.addAttribute("equipoData", equipoData);
         model.addAttribute("usuario", usuario);
         model.addAttribute("equipo",equipo);
         return "formEditarEquipo";
@@ -189,6 +192,7 @@ public class EquipoController {
         if (!usuario.getAdministrador())
             throw new UsuarioNoAdminException();
         equipoService.editarNombreEquipo(equipoData.getNombre(),idEquipo);
+        equipoService.cambiarDescripcion(idEquipo, equipoData.getDescripcion());
 
         return "redirect:/equipos";
     }
