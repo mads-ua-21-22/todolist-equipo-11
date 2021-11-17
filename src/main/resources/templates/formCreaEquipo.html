@@ -15,6 +15,8 @@
         <div class="form-group">
             <label for="titulo">Nombre del equipo:</label>
             <input class="form-control" id="titulo" name="titulo" required th:field="*{nombre}" type="text"/>
+            <label for="descripcion">Descripción:</label>
+            <textarea maxlength="255" class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}" type="textarea"/>
         </div>
         <button class="btn btn-primary" type="submit">Crear equipo</button>
         </div>
