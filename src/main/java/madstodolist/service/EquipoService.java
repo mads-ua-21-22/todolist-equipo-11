@@ -75,4 +75,10 @@ public class EquipoService {
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
         equipoRepository.delete(equipo);
     }
+    @Transactional
+    public void cambiarDescripcion(Long id, String descripcion) {
+        Equipo equipo = equipoRepository.findById(id).orElse(null);
+        if (equipo != null)
+            equipo.setDescripcion(descripcion);
+    }
 }
