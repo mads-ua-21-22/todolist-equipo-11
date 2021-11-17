@@ -106,7 +106,8 @@ public class EquipoWebTest {
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/equipos/crear"))
-                .andExpect(content().string(containsString("Creando nuevo equipo")));
+                .andExpect(content().string(containsString("Creando nuevo equipo")))
+                .andExpect(content().string(containsString("Descripción")));
     }
     @Test
     @Transactional

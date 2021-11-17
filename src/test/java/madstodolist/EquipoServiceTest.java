@@ -92,7 +92,8 @@ public class EquipoServiceTest {
         List<Equipo> equipos = equipoService.findAllOrderedByName();
         // THEN
         assertThat(equipos).hasSize(2);
-        equipoService.crearEquipo("equipoTest");
+        Equipo equipo = new Equipo("equipoTest");
+        equipoService.crearEquipo(equipo);
         equipos = equipoService.findAllOrderedByName();
         assertThat(equipos).hasSize(3);
     }

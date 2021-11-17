@@ -93,7 +93,10 @@ public class EquipoController {
         if (usuario == null) {
             throw new UsuarioNotFoundException();
         }
-        equipoService.crearEquipo(equipoData.getNombre());
+
+        Equipo equipo = new Equipo(equipoData.getNombre());
+        equipo.setDescripcion(equipoData.getDescripcion());
+        equipoService.crearEquipo(equipo);
         flash.addFlashAttribute("mensaje", "Equipo cread correctamente");
         return "redirect:/equipos";
     }
