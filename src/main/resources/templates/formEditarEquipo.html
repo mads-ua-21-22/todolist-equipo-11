@@ -16,7 +16,7 @@
             <label for="titulo">Nombre del equipo:</label>
             <input class="form-control" id="titulo" name="titulo" required th:field="*{nombre}" type="text"/>
             <label for="descripcion">Descripción:</label>
-            <input class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}" type="text"/>
+            <textarea maxlength="255" class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}"/>
         </div>
         <button class="btn btn-primary" type="submit">Editar equipo</button>
         </div>
