@@ -143,4 +143,14 @@ public class EquipoServiceTest {
         List<Equipo> equipos2 = equipoService.findAllOrderedByName();
         assertThat(equipos2).hasSize(1);
     }
+
+    @Test
+    @Transactional
+    public void cambiarDescripcionEquipo() {
+        Equipo equipo = equipoService.findById(1L);
+        String cambio = "Cambio de descripción";
+        equipoService.cambiarDescripcion(equipo.getId(), cambio);
+
+        assertThat(equipo.getDescripcion()).isEqualTo(cambio);
+    }
 }

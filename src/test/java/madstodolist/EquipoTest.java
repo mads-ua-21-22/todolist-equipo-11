@@ -123,4 +123,23 @@ public class EquipoTest {
         //Para que no peten los tests automaticos
         equipo.addUsuario(usuario);
     }
+
+    @Test
+    public void verDescripcionEquipoTest() {
+        // Equipo que incialmente tiene un string vacío
+        Equipo equipo = equipoRepository.findById(1L).orElse(null);
+
+        assertThat(equipo.getDescripcion()).isEqualTo("");
+    }
+
+    @Test
+    public void cambiarDescripcionEquipo() {
+        // Equipo que incialmente tiene un string vacío
+        Equipo equipo = equipoRepository.findById(1L).orElse(null);
+
+        String cambio = "Este es un equipo para los test";
+        equipo.setDescripcion(cambio);
+
+        assertThat(equipo.getDescripcion()).isEqualTo(cambio);
+    }
 }
