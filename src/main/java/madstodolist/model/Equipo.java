@@ -26,6 +26,10 @@ public class Equipo implements Serializable {
             joinColumns = @JoinColumn(name = "fk_usuario"),
             inverseJoinColumns = @JoinColumn(name = "fk_equipo"))
     Set<Usuario> usuarios = new HashSet<>();
+
+    @Column(columnDefinition = "varchar(255) default ''")
+    private String descripcion;
+
     // Constructor público con los atributos obligatorios. En este caso el correo electrónico.
     public Equipo(String nombre) {
         this.nombre = nombre;
@@ -52,6 +56,10 @@ public class Equipo implements Serializable {
 
     public Set<Usuario> getUsuarios() {
         return usuarios;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
     public void setUsuarios(Set<Usuario> usuarios) {
