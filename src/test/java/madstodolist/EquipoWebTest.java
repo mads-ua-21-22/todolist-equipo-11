@@ -72,6 +72,8 @@ public class EquipoWebTest {
         usuario.setAdministrador(true);
         List<Equipo> equipos = new ArrayList<>();
         Equipo equipo = new Equipo("Nombre");
+        String descripcion = "Esta es la descripcion";
+        equipo.setDescripcion(descripcion);
         equipo.addUsuario(usuario);
         equipos.add(equipo);
         when(usuarioService.findById(null)).thenReturn(usuario);
@@ -80,7 +82,8 @@ public class EquipoWebTest {
         when(equipoService.findAllOrderedByName()).thenReturn(equipos);
 
         this.mockMvc.perform(get("/equipos/1"))
-                .andExpect(content().string(containsString("Listado de usuarios que componen el equipo")));
+                .andExpect(content().string(containsString("Listado de usuarios que componen el equipo")))
+                .andExpect(content().string(containsString(descripcion)));
     }
 
     @Test
