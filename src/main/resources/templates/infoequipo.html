@@ -32,7 +32,7 @@
                         <td th:text="${usuar.nombre}"></td>
                         <td th:if="${usuario.getAdministrador()}">
                             <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
-                                    th:onclick="'del(\'/equipo/'+${equipo.id}+'/'+${usuar.id}+'\')'">Borrar miembro</button>
+                                    th:onclick="'delu(\'/equipo/'+${equipo.id}+'/'+${usuar.id}+'\')'">Borrar miembro</button>
 
                         </td>
                     </tr>
@@ -63,6 +63,16 @@
                 fetch(urlBorrar, {
                     method: 'DELETE'
                 }).then((res) => location.reload());
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function delu(urlBorrarUsuario){
+            if(confirm('¿Estás seguro/a de que quieres borrar el usuario del equipo?')){
+                fetch(urlBorrarUsuario,{
+                    method: 'DELETE'
+                }).then((res)=> location.reload());
             }
         }
     </script>
