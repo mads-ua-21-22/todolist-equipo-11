@@ -211,7 +211,7 @@ public class EquipoController {
             throw new UsuarioNotFoundException();
         if(!usuario.getAdministrador())
             throw new UsuarioNoAdminException();
-        equipoService.borrarUsuarioEquipo(idEquipo,idUsuario);
+        equipoService.eliminarDeEquipo(idUsuario,idEquipo);
         return "";
     }
 }
