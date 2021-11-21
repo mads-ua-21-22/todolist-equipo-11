@@ -196,4 +196,22 @@ public class EquipoController {
 
         return "redirect:/equipos";
     }
+
+    @DeleteMapping("/equipo/{id}/{userid}")
+    @ResponseBody
+    public String borraUsuarioEquipo(@PathVariable(value="id")Long idEquipo,
+                                     @PathVariable(value="userid")Long idUsuario,
+                                     Model model,RedirectAttributes flash,
+                                     HttpSession session){
+        Long idlogin = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session,idlogin);
+
+        Usuario usuario = usuarioService.findById(idlogin);
+        if(usuario == null)
+            throw new UsuarioNotFoundException();
+        if(!usuario.getAdministrador())
+            throw new UsuarioNoAdminException();
+        equipoService.borrarUsuarioEquipo(idEquipo,idUsuario);
+        return "";
+    }
 }
