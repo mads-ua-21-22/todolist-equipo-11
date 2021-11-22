@@ -43,8 +43,7 @@ public class EquipoService {
     }
 
     @Transactional
-    public Equipo crearEquipo(String nombreEquipo) {
-        Equipo equipo = new Equipo(nombreEquipo);
+    public Equipo crearEquipo(Equipo equipo) {
         equipoRepository.save(equipo);
         return equipo;
     }
@@ -74,5 +73,11 @@ public class EquipoService {
     public void borrarEquipo(Long idEquipo) {
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
         equipoRepository.delete(equipo);
+    }
+    @Transactional
+    public void cambiarDescripcion(Long id, String descripcion) {
+        Equipo equipo = equipoRepository.findById(id).orElse(null);
+        if (equipo != null)
+            equipo.setDescripcion(descripcion);
     }
 }

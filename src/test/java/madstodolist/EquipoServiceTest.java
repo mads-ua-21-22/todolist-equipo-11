@@ -92,7 +92,8 @@ public class EquipoServiceTest {
         List<Equipo> equipos = equipoService.findAllOrderedByName();
         // THEN
         assertThat(equipos).hasSize(2);
-        equipoService.crearEquipo("equipoTest");
+        Equipo equipo = new Equipo("equipoTest");
+        equipoService.crearEquipo(equipo);
         equipos = equipoService.findAllOrderedByName();
         assertThat(equipos).hasSize(3);
     }
@@ -142,5 +143,15 @@ public class EquipoServiceTest {
         equipoService.borrarEquipo(1L);
         List<Equipo> equipos2 = equipoService.findAllOrderedByName();
         assertThat(equipos2).hasSize(1);
+    }
+
+    @Test
+    @Transactional
+    public void cambiarDescripcionEquipo() {
+        Equipo equipo = equipoService.findById(1L);
+        String cambio = "Cambio de descripción";
+        equipoService.cambiarDescripcion(equipo.getId(), cambio);
+
+        assertThat(equipo.getDescripcion()).isEqualTo(cambio);
     }
 }

@@ -4,7 +4,7 @@
 <head th:replace="fragments :: head (titulo='Equipos')"></head>
 
     <body>
-    <header th:replace="fragments:: header (username=${usuario.nombre}, userid=${usuario.id})"> </header>
+    <header th:replace="fragments:: header (esAdmin=${usuario.getAdministrador()} ,username=${usuario.nombre}, userid=${usuario.id})"> </header>
 
     <div class="container-fluid">
 
@@ -13,18 +13,28 @@
                 <h2 th:text="'Listado de usuarios que componen el equipo ' + ${equipo.getNombre()} "></h2>
             </div>
         </div>
-
+        <div class="subTitle mt-md-4">
+            <p>
+            <h5 th:text="${equipo.getDescripcion()}"></h5>
+            </p>
+        </div>
         <div class="row mt-3">
             <div class="col">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>Usuarios</th>
+                        <th th:if="${usuario.getAdministrador()}" >Accion</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="usuario: ${usuarios}">
-                        <td th:text="${usuario.nombre}"></td>
+                    <tr th:each="usuar: ${usuarios}">
+                        <td th:text="${usuar.nombre}"></td>
+                        <td th:if="${usuario.getAdministrador()}">
+                            <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                                    th:onclick="'delu(\'/equipo/'+${equipo.id}+'/'+${usuar.id}+'\')'">Borrar miembro</button>
+
+                        </td>
                     </tr>
 
 
@@ -53,6 +63,16 @@
                 fetch(urlBorrar, {
                     method: 'DELETE'
                 }).then((res) => location.reload());
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function delu(urlBorrarUsuario){
+            if(confirm('¿Estás seguro/a de que quieres borrar el usuario del equipo?')){
+                fetch(urlBorrarUsuario,{
+                    method: 'DELETE'
+                }).then((res)=> location.reload());
             }
         }
     </script>
