@@ -66,3 +66,5 @@ En Equipos hemos agregado el atributo descripción, y hemos generado unos peque�
 
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
+Los scripts de .sql se encuentran en mi-host, asi como sus copias de seguridad.
+En el proyecto podemos encontrar los archivos .sql en el directorio sql.
