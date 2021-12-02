@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,5 +110,39 @@ public class TareaServiceTest {
         // THEN
 
         assertThat(tareaService.findById(tarea.getId())).isNull();
+    }
+
+    @Test
+    @Transactional
+    public void allTareasCompletadasTest() {
+        Tarea t1 = tareaService.nuevaTareaUsuario(1L, "Tarea 1");
+        Tarea t2 = tareaService.nuevaTareaUsuario(1L, "Tarea 2");
+        Tarea t3 = tareaService.nuevaTareaUsuario(1L, "Tarea 3");
+
+        t2.setComplete(); t3.setComplete();
+        ArrayList<Tarea> tareasCompletadas = tareaService.allTareasCompletadasUsuario(1L);
+
+        assertThat(tareasCompletadas).hasSize(2);
+    }
+
+    @Test
+    @Transactional
+    public void allTareasNoCompletadasTest() {
+        Tarea t1 = tareaService.nuevaTareaUsuario(1L, "Tarea 1");
+        Tarea t2 = tareaService.nuevaTareaUsuario(1L, "Tarea 2");
+        Tarea t3 = tareaService.nuevaTareaUsuario(1L, "Tarea 3");
+
+        t2.setComplete(); t3.setComplete();
+        ArrayList<Tarea> tareasCompletadas = tareaService.allTareasNoCompletadasUsuario(1L);
+
+        assertThat(tareasCompletadas).hasSize(3);
+    }
+
+    @Test
+    public void cambiarTareaACompletada() {
+        Tarea tarea = tareaService.findById(1L);
+        tareaService.completaTarea(tarea);
+
+        assertThat(tarea.isComplete()).isTrue();
     }
 }
