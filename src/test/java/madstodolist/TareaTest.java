@@ -152,4 +152,12 @@ public class TareaTest {
         assertThat(tareas).isEqualTo(usuario.getTareas());
         assertThat(usuario.getTareas()).contains(tarea);
     }
+
+    @Test
+    public void tareaNoCompletadaPorDefecto() {
+        Usuario usuario = new Usuario("juan.gutierrez@gmail.com");
+        Tarea t = new Tarea(usuario, "Práctica 5");
+
+        assertThat(t.isComplete()).isFalse();
+    }
 }
