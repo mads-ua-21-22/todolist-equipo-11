@@ -70,6 +70,8 @@ public class Tarea implements Serializable {
 
     public boolean isComplete() { return completada; }
 
+    public void setComplete() { this.completada = !this.completada; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
