@@ -5,8 +5,10 @@ import madstodolist.authentication.ManagerUserSession;
 import madstodolist.authentication.UsuarioNoAdminException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.Equipo;
+import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.service.EquipoService;
+import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,8 @@ public class EquipoController {
     EquipoService equipoService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    TareaService tareaService;
     @Autowired
     ManagerUserSession managerUserSession;
 
@@ -71,6 +75,10 @@ public class EquipoController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("equipo", equipo);
+        model.addAttribute("tareasCompletadas", tareasCompletadas);
+        model.addAttribute("tareasNoCompletadas", tareasNoCompletadas);
+        model.addAttribute("porcentajeCompletadas", porcentajeCompletadas);
+
         return "infoequipo";
     }
 

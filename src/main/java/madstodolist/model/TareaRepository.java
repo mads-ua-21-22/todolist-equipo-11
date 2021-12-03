@@ -11,4 +11,10 @@ public interface TareaRepository extends CrudRepository<Tarea, Long> {
 
     @Query(value = "SELECT * from tareas where completada = false and usuario_id = ?1", nativeQuery = true)
     List<Tarea> allTareasNoCompletadas(Long idUsuario);
+
+    @Query(value = "SELECT * from tareas where completada = true and equipo_id = ?1", nativeQuery = true)
+    List<Tarea> allTareasCompletadasEquipo(Long idEquipo);
+
+    @Query(value = "SELECT * from tareas where completada = false and equipo_id = ?1", nativeQuery = true)
+    List<Tarea> allTareasNoCompletadasEquipo(Long idEquipo);
 }
