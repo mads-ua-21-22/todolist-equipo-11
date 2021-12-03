@@ -79,4 +79,17 @@ public class TareaService {
         }
         tareaRepository.delete(tarea);
     }
+
+    public ArrayList<Tarea> allTareasCompletadasUsuario(Long idUsuario) {
+        return new ArrayList(tareaRepository.allTareasCompletadas(idUsuario));
+    }
+
+    public ArrayList<Tarea> allTareasNoCompletadasUsuario(Long idUsuario) {
+        return new ArrayList(tareaRepository.allTareasNoCompletadas(idUsuario));
+    }
+
+    @Transactional
+    public void completaTarea(Tarea tarea) {
+        tarea.setComplete();
+    }
 }

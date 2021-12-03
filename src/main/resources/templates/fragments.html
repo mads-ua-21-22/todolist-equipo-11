@@ -5,16 +5,28 @@
     <meta charset="UTF-8"/>
     <title th:text="${titulo}"></title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
 
 <div th:fragment="javascript">
     <script th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript">
+        // Lanzamos una petición DELETE por JavaScript para borrar una tarea
+        function del(urlBorrar) {
+            if (confirm('¿Estás seguro/a de que quieres borrar la tarea?')) {
+                fetch(urlBorrar, {
+                    method: 'DELETE'
+                }).then((res) => location.reload());
+            }
+        }
+    </script>
+
 </div>
 
 <div th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand navbar-light bg-light">
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -46,6 +58,44 @@
             </ul>
         </div>
     </nav>
+</div>
+
+<div th:if="${tareas.size() > 0}" th:fragment="tablaTareas(tareas, titulo)">
+    <table class="table">
+        <caption style="caption-side: top;" th:text="${titulo}"></caption>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tarea</th>
+            <th>Acción</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tarea: ${tareas}">
+            <td th:text="${tarea.id}"></td>
+            <td th:text="${tarea.titulo}"></td>
+            <td>
+                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
+                <i class="fas fa-pen"></i>
+                </a>
+                <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                        th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+            <td>
+                <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>
+                <form th:if="${!tarea.isComplete()}" method="post" th:action="@{/tareas/{id}/completada(id=${tarea.getId()})}" >
+                    <button class="btn btn-warning" type="submit">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="float-right alert alert-info">Total: <b th:text="${tareas.size()}"></b></p>
 </div>
 
 </html>
