@@ -88,6 +88,14 @@ public class TareaService {
         return new ArrayList(tareaRepository.allTareasNoCompletadas(idUsuario));
     }
 
+    public ArrayList<Tarea> allTareasCompletadasEquipo(Long idEquipo){
+        return new ArrayList(tareaRepository.allTareasCompletadasEquipo(idEquipo));
+    }
+
+    public ArrayList<Tarea> allTareasNoCompletadasEquipo(Long idEquipo){
+        return  new ArrayList(tareaRepository.allTareasNoCompletadasEquipo(idEquipo));
+    }
+
     @Transactional
     public void completaTarea(Tarea tarea) {
         tarea.setComplete();
