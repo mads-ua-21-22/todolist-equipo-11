@@ -26,7 +26,7 @@ public class Tarea implements Serializable {
 
     //Relacion muchos-a-uno entre tareas y equipo
     @ManyToOne
-    //Nombre de la columan en la BS que guarda físicamente
+    //Nombre de la columan en la BD que guarda físicamente
     //el ID del equipo con el que está asociado una tarea
     @JoinColumn(name = "equipo_id")
     private Equipo equipo;

@@ -245,4 +245,19 @@ public class EquipoController {
         model.addAttribute("equipo",usuario);
         return "formNuevaTareaEquipo";
     }
+
+    @PostMapping("/equipos/{id}/tareas/nueva")
+    public String nuevaTarea(@PathVariable(value = "id") Long idEquipo, @ModelAttribute TareaData tareaData,
+                             Model model, RedirectAttributes flash,
+                             HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null)
+            throw new UsuarioNotFoundException();
+        tareaService.nuevaTareaEquipo(idEquipo,tareaData.getTitulo());
+        flash.addFlashAttribute("mensaje","Tarea creada correctamente");
+        return "redirect:/equipos/" + idEquipo;
+    }
 }
