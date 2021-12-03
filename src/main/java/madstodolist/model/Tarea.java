@@ -17,13 +17,19 @@ public class Tarea implements Serializable {
     @NotNull
     private String titulo;
 
-    @NotNull
     // Relación muchos-a-uno entre tareas y usuario
     @ManyToOne
     // Nombre de la columna en la BD que guarda físicamente
     // el ID del usuario con el que está asociado una tarea
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    //Relacion muchos-a-uno entre tareas y equipo
+    @ManyToOne
+    //Nombre de la columan en la BS que guarda físicamente
+    //el ID del equipo con el que está asociado una tarea
+    @JoinColumn(name = "equipo_id")
+    private Equipo equipo;
 
     // Atributo completada para saber si una tarea está completada
     // Por defecto será falso
