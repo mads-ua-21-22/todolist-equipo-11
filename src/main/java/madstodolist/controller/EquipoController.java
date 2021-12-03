@@ -229,4 +229,20 @@ public class EquipoController {
         equipoService.eliminarDeEquipo(idUsuario,idEquipo);
         return "";
     }
+
+    @GetMapping("/equipos/{id}/tareas/nueva")
+    public String formNuevaTarea(@PathVariable(value = "id") Long idEquipo,
+                                 @ModelAttribute TareaData tareaData,Model model,
+                                 HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if(usuario == null)
+            throw new UsuarioNotFoundException();
+        Equipo equipo = equipoService.findById(idEquipo);
+        model.addAttribute("usuario",usuario);
+        model.addAttribute("equipo",usuario);
+        return "formNuevaTareaEquipo";
+    }
 }
