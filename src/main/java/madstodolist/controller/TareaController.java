@@ -69,9 +69,18 @@ public class TareaController {
         if (usuario == null) {
             throw new UsuarioNotFoundException();
         }
-        List<Tarea> tareas = tareaService.allTareasUsuario(idUsuario);
+        List<Tarea> tareasCompletadas = tareaService.allTareasCompletadasUsuario(idUsuario);
+        List<Tarea> tareasNoCompletadas = tareaService.allTareasNoCompletadasUsuario(idUsuario);
+
+        float porcentajeCompletadas = 0;
+
+        if(tareasCompletadas.size() > 0)
+            porcentajeCompletadas = (float) tareasCompletadas.size() / (tareasCompletadas.size() + tareasNoCompletadas.size());
+
         model.addAttribute("usuario", usuario);
-        model.addAttribute("tareas", tareas);
+        model.addAttribute("tareasCompletadas", tareasCompletadas);
+        model.addAttribute("tareasNoCompletadas", tareasNoCompletadas);
+        model.addAttribute("porcentajeCompletadas", porcentajeCompletadas);
         return "listaTareas";
     }
 
@@ -122,6 +131,17 @@ public class TareaController {
 
         tareaService.borraTarea(idTarea);
         return "";
+    }
+
+    @PostMapping("/tareas/{id}/completada")
+    public String completarTarea(@PathVariable(value="id") Long idTarea, HttpSession session) {
+        // Obtener tarea
+        Tarea tarea = tareaService.findById(idTarea);
+        // Usuario de la tarea
+        Usuario usuario = tarea.getUsuario();
+        // Cambiar estado de la tarea
+        tareaService.completaTarea(tarea);
+        return "redirect:/usuarios/" + usuario.getId() + "/tareas";
     }
 }
 
