@@ -47,7 +47,15 @@ public class Tarea implements Serializable {
     public Tarea(Usuario usuario, String titulo) {
         this.usuario = usuario;
         this.titulo = titulo;
+        this.equipo = null;
         usuario.getTareas().add(this);
+    }
+
+    public Tarea(Equipo equipo, String titulo) {
+        this.usuario = null;
+        this.titulo = titulo;
+        this.equipo = equipo;
+        equipo.getTareas().add(this);
     }
 
     public Long getId() {
@@ -73,6 +81,10 @@ public class Tarea implements Serializable {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public Equipo getEquipo() { return  equipo; }
+
+    public void setEquipo(Equipo equipo) { this.equipo = equipo; }
 
     public boolean isComplete() { return completada; }
 
