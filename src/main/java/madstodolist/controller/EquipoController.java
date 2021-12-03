@@ -55,6 +55,13 @@ public class EquipoController {
         Equipo equipo = equipoService.findById(idEquipo);
 
         List<Usuario> usuarios = equipoService.usuariosEquipo(idEquipo);
+        List<Tarea> tareasCompletadas = tareaService.allTareasCompletadasEquipo(idEquipo);
+        List<Tarea> tareasNoCompletadas = tareaService.allTareasNoCompletadasEquipo(idEquipo);
+
+        float porcentajeCompletadas = 0;
+
+        if(tareasCompletadas.size()>0)
+            porcentajeCompletadas = (float) tareasCompletadas.size() / (tareasCompletadas.size() + tareasNoCompletadas.size());
 
         boolean aparezco = false;
         if(equipo.getUsuarios().contains(usuario))
