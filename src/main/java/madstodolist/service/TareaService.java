@@ -39,14 +39,24 @@ public class TareaService {
         return tarea;
     }
 
+    //Se le asigna la tarea al usuario que la crea por un problema con la BD que aunque le he quitado el NotNull
+    // me sigue pidiendo una id
     @Transactional
-    public Tarea nuevaTareaEquipo(Long idEquipo,String tituloTarea) {
+    public Tarea nuevaTareaEquipo(Long idEquipo,Long idUsuario,String tituloTarea) {
         logger.debug("Añadiendo tarea "+tituloTarea+" al equipo "+idEquipo);
+
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null)
+            throw new TareaServiceException("Usuario " + idUsuario + " no existe al crear tarea " + tituloTarea);
+
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
         if(equipo == null)
             throw new TareaServiceException("Equipo "+idEquipo+" no exite al crear tarea "+ tituloTarea);
-        Tarea tarea = new Tarea(equipo,tituloTarea);
+
+        Tarea tarea = new Tarea(usuario,tituloTarea);
+        tarea.setEquipo(equipo);
         tareaRepository.save(tarea);
+
         return tarea;
     }
 

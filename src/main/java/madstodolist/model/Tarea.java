@@ -1,5 +1,7 @@
 package madstodolist.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class Tarea implements Serializable {
     @ManyToOne
     // Nombre de la columna en la BD que guarda físicamente
     // el ID del usuario con el que está asociado una tarea
+    @Nullable
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
@@ -47,12 +50,10 @@ public class Tarea implements Serializable {
     public Tarea(Usuario usuario, String titulo) {
         this.usuario = usuario;
         this.titulo = titulo;
-        this.equipo = null;
         usuario.getTareas().add(this);
     }
 
     public Tarea(Equipo equipo, String titulo) {
-        this.usuario = null;
         this.titulo = titulo;
         this.equipo = equipo;
         equipo.getTareas().add(this);
