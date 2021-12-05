@@ -75,6 +75,7 @@ public class EquipoController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("equipo", equipo);
+        session.setAttribute("tareaequipo",true);
         model.addAttribute("tareasCompletadas", tareasCompletadas);
         model.addAttribute("tareasNoCompletadas", tareasNoCompletadas);
         model.addAttribute("porcentajeCompletadas", porcentajeCompletadas);
