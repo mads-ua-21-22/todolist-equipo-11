@@ -17,7 +17,7 @@
             <input class="form-control" id="titulo" name="titulo" required th:field="*{titulo}" type="text"/>
         </div>
         <button class="btn btn-primary" type="submit">Modificar tarea</button>
-        <a class="btn btn-link" th:href="@{/usuarios/{id}/tareas(id=${tarea.usuario.id})}">Cancelar</a>
+        <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
         </div>
     </form>
 </div>
