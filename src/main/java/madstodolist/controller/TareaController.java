@@ -145,7 +145,10 @@ public class TareaController {
         Usuario usuario = tarea.getUsuario();
         // Cambiar estado de la tarea
         tareaService.completaTarea(tarea);
-        return "redirect:/usuarios/" + usuario.getId() + "/tareas";
+        if((Boolean) session.getAttribute("tareaequipo"))
+            return "redirect:/equipos/" + tarea.getEquipo().getId();
+        else
+            return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
     }
 }
 
