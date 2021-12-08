@@ -20,6 +20,10 @@ public class Equipo implements Serializable {
     @NotNull
     private String nombre;
 
+    //Relacion Equipo Tareas
+    @OneToMany(mappedBy =  "equipo",fetch = FetchType.EAGER)
+    Set<Tarea> tareas = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "equipo_usuario",
@@ -69,6 +73,11 @@ public class Equipo implements Serializable {
     public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
+
+    public void setTareas(Set<Tarea> tareas){this.tareas = tareas;}
+
+    public Set<Tarea> getTareas(){return tareas;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

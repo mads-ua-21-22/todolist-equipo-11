@@ -81,6 +81,7 @@ public class TareaController {
         model.addAttribute("tareasCompletadas", tareasCompletadas);
         model.addAttribute("tareasNoCompletadas", tareasNoCompletadas);
         model.addAttribute("porcentajeCompletadas", porcentajeCompletadas);
+        session.setAttribute("tareaequipo",false);
         return "listaTareas";
     }
 
@@ -114,7 +115,10 @@ public class TareaController {
 
         tareaService.modificaTarea(idTarea, tareaData.getTitulo());
         flash.addFlashAttribute("mensaje", "Tarea modificada correctamente");
-        return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
+        if((Boolean) session.getAttribute("tareaequipo"))
+            return "redirect:/equipos/" + tarea.getEquipo().getId();
+        else
+            return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
     }
 
     @DeleteMapping("/tareas/{id}")
@@ -141,7 +145,10 @@ public class TareaController {
         Usuario usuario = tarea.getUsuario();
         // Cambiar estado de la tarea
         tareaService.completaTarea(tarea);
-        return "redirect:/usuarios/" + usuario.getId() + "/tareas";
+        if((Boolean) session.getAttribute("tareaequipo"))
+            return "redirect:/equipos/" + tarea.getEquipo().getId();
+        else
+            return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
     }
 }
 
