@@ -18,7 +18,7 @@
             <label>Descripción de la tarea: </label>
             <p th:text="${tarea.getDescripcion()}"></p>
         </div>
-        <button class="btn btn-primary" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Modificar tarea</button>
+        <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>Editar tarea</a>
         <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
     </div>
 </div>
