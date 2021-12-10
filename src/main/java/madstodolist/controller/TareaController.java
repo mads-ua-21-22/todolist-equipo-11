@@ -85,6 +85,19 @@ public class TareaController {
         return "listaTareas";
     }
 
+    @GetMapping("/tareas/{id}")
+    public String formTarea(@PathVariable(value = "id") Long idTarea, @ModelAttribute TareaData tareaData,
+                            Model model, HttpSession session) {
+        Tarea tarea = tareaService.findById(idTarea);
+        if (tarea == null)
+            throw new TareaNotFoundException();
+        managerUserSession.comprobarUsuarioLogeado(session,tarea.getUsuario().getId());
+        model.addAttribute("tarea",tarea);
+        tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        return "infotarea";
+    }
+
     @GetMapping("/tareas/{id}/editar")
     public String formEditaTarea(@PathVariable(value="id") Long idTarea, @ModelAttribute TareaData tareaData,
                                  Model model, HttpSession session) {
