@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -52,6 +53,20 @@ public class TareaService {
         return tarea;
     }
 
+    @Transactional
+    public Tarea nuevaTareaUsuario(Long idUsuario,String tituloTarea, String descTarea,Date fechaLimite){
+        logger.debug("Añadiendo tarea " + tituloTarea + "al usuario " + idUsuario);
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null) {
+            throw new TareaServiceException("Usuario " + idUsuario + " no existe al crear tarea " + tituloTarea);
+        }
+        Tarea tarea = new Tarea(usuario,tituloTarea);
+        tarea.setDescripcion(descTarea);
+        tarea.setFechaLimite(fechaLimite);
+        tareaRepository.save(tarea);
+        return tarea;
+    }
+
     //Se le asigna la tarea al usuario que la crea por un problema con la BD que aunque le he quitado el NotNull
     // me sigue pidiendo una id
     @Transactional
@@ -88,6 +103,27 @@ public class TareaService {
         Tarea tarea = new Tarea(usuario,tituloTarea);
         tarea.setEquipo(equipo);
         tarea.setDescripcion(descTarea);
+        tareaRepository.save(tarea);
+
+        return tarea;
+    }
+
+    @Transactional
+    public Tarea nuevaTareaEquipo(Long idEquipo, Long idUsuario, String tituloTarea, String descTarea, Date fechaLimite) {
+        logger.debug("Añadiendo tarea "+tituloTarea+" al equipo "+idEquipo);
+
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null)
+            throw new TareaServiceException("Usuario " + idUsuario + " no existe al crear tarea " + tituloTarea);
+
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        if(equipo == null)
+            throw new TareaServiceException("Equipo "+idEquipo+" no exite al crear tarea "+ tituloTarea);
+
+        Tarea tarea = new Tarea(usuario,tituloTarea);
+        tarea.setEquipo(equipo);
+        tarea.setDescripcion(descTarea);
+        tarea.setFechaLimite(fechaLimite);
         tareaRepository.save(tarea);
 
         return tarea;
