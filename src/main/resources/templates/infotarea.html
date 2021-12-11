@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Login')"></head>
+
+<body>
+<header th:replace="fragments:: header (esAdmin=${tarea.usuario.getAdministrador()} ,username=${tarea.usuario.nombre}, userid=${tarea.usuario.id})"> </header>
+
+<div class="container-fluid">
+
+    <h2 th:text="'Información de la tarea ' + ${tarea.getId()}"></h2>
+
+    <div class="col-6">
+        <div class="form-group">
+            <label th:text="'Título de la tarea: ' + ${tarea.getTitulo()}"></label>
+        </div>
+        <div class="form-group">
+            <label>Descripción de la tarea: </label>
+            <p th:text="${tarea.getDescripcion()}"></p>
+        </div>
+        <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>Editar tarea</a>
+        <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>

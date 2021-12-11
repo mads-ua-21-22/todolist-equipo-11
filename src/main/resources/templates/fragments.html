@@ -79,6 +79,9 @@
                 <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
                 <i class="fas fa-pen"></i>
                 </a>
+                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}(id=${tarea.id})}"/>
+                <i class="fas fa-info-circle"></i>
+                </a>
                 <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
                         th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
                     <i class="fas fa-trash"></i>

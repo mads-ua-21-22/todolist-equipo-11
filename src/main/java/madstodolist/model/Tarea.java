@@ -38,6 +38,9 @@ public class Tarea implements Serializable {
     // Por defecto será falso
     @Column(columnDefinition = "bool default false", nullable = false)
     private boolean completada;
+
+    private String descripcion;
+
     // Constructor vacío necesario para JPA/Hibernate.
     // Lo hacemos privado para que no se pueda usar desde el código de la aplicación. Para crear un
     // usuario en la aplicación habrá que llamar al constructor público. Hibernate sí que lo puede usar, a pesar
@@ -74,6 +77,10 @@ public class Tarea implements Serializable {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+
+    public String getDescripcion() { return  descripcion; }
+
+    public void setDescripcion(String descripcion){ this.descripcion = descripcion; }
 
     public Usuario getUsuario() {
         return usuario;
