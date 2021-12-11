@@ -6,11 +6,21 @@ import javax.validation.constraints.Email;
 import java.util.Date;
 
 public class ModificaData {
+    private String actualpassword;
     private String password;
     private String password2;
     private String nombre;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
+
+
+    public String getActualpassword() {
+        return actualpassword;
+    }
+
+    public void setActualpassword(String actualpassword) {
+        this.actualpassword = actualpassword;
+    }
 
     public String getPassword() {
         return password;
