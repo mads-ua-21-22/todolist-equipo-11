@@ -124,6 +124,19 @@ public class TareaService {
     }
 
     @Transactional
+    public Tarea modificaTarea(Long idTarea, String nuevoTitulo,String nuevaDescripcion) {
+        logger.debug("Modificando tarea " + idTarea + " - " + nuevoTitulo);
+        Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
+        if (tarea == null) {
+            throw new TareaServiceException("No existe tarea con id " + idTarea);
+        }
+        tarea.setTitulo(nuevoTitulo);
+        tarea.setDescripcion(nuevaDescripcion);
+        tareaRepository.save(tarea);
+        return tarea;
+    }
+
+    @Transactional
     public void borraTarea(Long idTarea) {
         logger.debug("Borrando tarea " + idTarea);
         Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
