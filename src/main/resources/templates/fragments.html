@@ -69,6 +69,7 @@
             <th>Tarea</th>
             <th>Acción</th>
             <th>Estado</th>
+            <th>Completar</th>
         </tr>
         </thead>
         <tbody>
@@ -86,6 +87,14 @@
                         th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
                     <i class="fas fa-trash"></i>
                 </button>
+            </td>
+            <td>
+                <div th:if="${!tarea.isComplete()}">
+                    <div th:if="${!tarea.nofechaLimite()}">
+                        <p class="text-danger" th:if="${tarea.retrasada()}">Retrasada!</p>
+                        <p class="text-success" th:if="${!tarea.retrasada()}">En Curso</p>
+                    </div>
+                </div>
             </td>
             <td>
                 <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>

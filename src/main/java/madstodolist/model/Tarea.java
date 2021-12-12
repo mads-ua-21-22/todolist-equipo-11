@@ -1,10 +1,12 @@
 package madstodolist.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -106,6 +108,16 @@ public class Tarea implements Serializable {
     public Date getFechaLimite() { return  fechaLimite; }
 
     public void setFechaLimite(Date fechaLimite) { this.fechaLimite = fechaLimite; }
+
+    public boolean retrasada() {
+        java.util.Date fecha = new Date();
+        if(fecha.compareTo(fechaLimite) == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean nofechaLimite() { return  fechaLimite == null; }
 
     @Override
     public boolean equals(Object o) {
