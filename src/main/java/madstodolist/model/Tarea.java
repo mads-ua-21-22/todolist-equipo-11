@@ -1,10 +1,13 @@
 package madstodolist.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -40,6 +43,10 @@ public class Tarea implements Serializable {
     private boolean completada;
 
     private String descripcion;
+
+    @Column(name = "fecha_limite")
+    @Temporal(TemporalType.DATE)
+    private Date fechaLimite;
 
     // Constructor vacío necesario para JPA/Hibernate.
     // Lo hacemos privado para que no se pueda usar desde el código de la aplicación. Para crear un
@@ -97,6 +104,20 @@ public class Tarea implements Serializable {
     public boolean isComplete() { return completada; }
 
     public void setComplete() { this.completada = !this.completada; }
+
+    public Date getFechaLimite() { return  fechaLimite; }
+
+    public void setFechaLimite(Date fechaLimite) { this.fechaLimite = fechaLimite; }
+
+    public boolean retrasada() {
+        java.util.Date fecha = new Date();
+        if(fecha.compareTo(fechaLimite) == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean nofechaLimite() { return  fechaLimite == null; }
 
     @Override
     public boolean equals(Object o) {

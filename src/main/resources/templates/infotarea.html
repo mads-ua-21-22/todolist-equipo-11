@@ -15,6 +15,10 @@
             <label th:text="'Título de la tarea: ' + ${tarea.getTitulo()}"></label>
         </div>
         <div class="form-group">
+            <label>Fecha limite de la tarea:</label>
+            <p th:text="${tarea.getFechaLimite()}"></p>
+        </div>
+        <div class="form-group">
             <label>Descripción de la tarea: </label>
             <p th:text="${tarea.getDescripcion()}"></p>
         </div>
