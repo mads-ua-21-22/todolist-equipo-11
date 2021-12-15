@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,6 +49,20 @@ public class TareaService {
         }
         Tarea tarea = new Tarea(usuario,tituloTarea);
         tarea.setDescripcion(descTarea);
+        tareaRepository.save(tarea);
+        return tarea;
+    }
+
+    @Transactional
+    public Tarea nuevaTareaUsuario(Long idUsuario,String tituloTarea, String descTarea,Date fechaLimite){
+        logger.debug("Añadiendo tarea " + tituloTarea + "al usuario " + idUsuario);
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null) {
+            throw new TareaServiceException("Usuario " + idUsuario + " no existe al crear tarea " + tituloTarea);
+        }
+        Tarea tarea = new Tarea(usuario,tituloTarea);
+        tarea.setDescripcion(descTarea);
+        tarea.setFechaLimite(fechaLimite);
         tareaRepository.save(tarea);
         return tarea;
     }
@@ -93,6 +108,27 @@ public class TareaService {
         return tarea;
     }
 
+    @Transactional
+    public Tarea nuevaTareaEquipo(Long idEquipo, Long idUsuario, String tituloTarea, String descTarea, Date fechaLimite) {
+        logger.debug("Añadiendo tarea "+tituloTarea+" al equipo "+idEquipo);
+
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null)
+            throw new TareaServiceException("Usuario " + idUsuario + " no existe al crear tarea " + tituloTarea);
+
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        if(equipo == null)
+            throw new TareaServiceException("Equipo "+idEquipo+" no exite al crear tarea "+ tituloTarea);
+
+        Tarea tarea = new Tarea(usuario,tituloTarea);
+        tarea.setEquipo(equipo);
+        tarea.setDescripcion(descTarea);
+        tarea.setFechaLimite(fechaLimite);
+        tareaRepository.save(tarea);
+
+        return tarea;
+    }
+
     @Transactional(readOnly = true)
     public List<Tarea> allTareasUsuario(Long idUsuario) {
         logger.debug("Devolviendo todas las tareas del usuario " + idUsuario);
@@ -132,6 +168,20 @@ public class TareaService {
         }
         tarea.setTitulo(nuevoTitulo);
         tarea.setDescripcion(nuevaDescripcion);
+        tareaRepository.save(tarea);
+        return tarea;
+    }
+
+    @Transactional
+    public Tarea modificaTarea(Long idTarea, String nuevoTitulo,String nuevaDescripcion,Date nuevaFecha) {
+        logger.debug("Modificando tarea " + idTarea + " - " + nuevoTitulo);
+        Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
+        if (tarea == null) {
+            throw new TareaServiceException("No existe tarea con id " + idTarea);
+        }
+        tarea.setTitulo(nuevoTitulo);
+        tarea.setDescripcion(nuevaDescripcion);
+        tarea.setFechaLimite(nuevaFecha);
         tareaRepository.save(tarea);
         return tarea;
     }
