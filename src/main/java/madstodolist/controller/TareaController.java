@@ -96,6 +96,7 @@ public class TareaController {
         model.addAttribute("tarea",tarea);
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
+        model.addAttribute("comentarios", tarea.getComentarios());
         return "infotarea";
     }
 

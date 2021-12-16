@@ -24,6 +24,25 @@
         </div>
         <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>Editar tarea</a>
         <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
+
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Comentario</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="comentario: ${comentarios}">
+                        <td th:text="${comentario.usuario}"></td>
+                        <td th:text="${comentario.comentario}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Login')"></head>
+
+<body>
+<header th:replace="fragments :: header (esAdmin=${usuario.getAdministrador()} ,username=${usuario.nombre}, userid=${usuario.id})"> </header>
+
+<div class="container-fluid">
+
+    <h2 th:text="'Nuevo comentario en ' + ${tarea.getTitulo()}"></h2>
+
+    <form method="post" th:action="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${usuario.id},tarea=${tarea.id})}" th:object="${comentarioData}">
+        <div class="col-6">
+        <div class="form-group">
+            <label for="titulo">Nuevo comentario en la tarea:</label>
+            <input class="form-control" id="titulo" name="titulo" required th:field="*{Comentario}" type="text"/>
+         </div>
+        <button class="btn btn-primary" type="submit">Crear comentario</button>
+            <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>
