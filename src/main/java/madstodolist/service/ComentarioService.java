@@ -31,8 +31,8 @@ public class ComentarioService {
 
     @Transactional
     public Comentario nuevoComentarioTarea(Long idUsuario, Long idTarea, String descComentario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
-        Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
+        Usuario usuario = usuarioRepository.findById(3L).orElse(null);
+        Tarea tarea = tareaRepository.findById(1L).orElse(null);
         if(tarea == null )
             throw new TareaServiceException("No existe la tarea " +idTarea );
         if(usuario == null)

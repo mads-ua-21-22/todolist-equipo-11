@@ -10,7 +10,7 @@
 
     <h2 th:text="'Nuevo comentario en ' + ${tarea.getTitulo()}"></h2>
 
-    <form method="post" th:action="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${usuario.id},tarea=${tarea.id})}" th:object="${comentarioData}">
+    <form method="post" th:action="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${usuario.id}, tarea=${tarea.id})}" th:object="${comentarioData}">
         <div class="col-6">
         <div class="form-group">
             <label for="titulo">Nuevo comentario en la tarea:</label>

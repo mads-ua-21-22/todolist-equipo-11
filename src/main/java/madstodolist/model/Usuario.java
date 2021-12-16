@@ -69,10 +69,6 @@ public class Usuario implements Serializable {
         this.equipos = equipos;
     }
 
-    public void setEquipos(Set<Equipo> equipos) {
-        this.equipos = equipos;
-    }
-
     public Set<Comentario> getComentarios() {
         return comentarios;
     }

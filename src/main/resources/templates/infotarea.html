@@ -24,7 +24,7 @@
         </div>
         <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Editar tarea</a>
         <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
-
+        <p><a class="btn btn-primary" th:href="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${tarea.usuario.id}, tarea=${tarea.id})}"> Nuevo comentario</a>
         <div class="row mt-3">
             <div class="col">
                 <table class="table table-striped">

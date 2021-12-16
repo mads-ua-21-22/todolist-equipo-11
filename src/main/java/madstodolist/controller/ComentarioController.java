@@ -3,6 +3,7 @@ package madstodolist.controller;
 import madstodolist.authentication.ManagerUserSession;
 import madstodolist.controller.exception.TareaNotFoundException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
+import madstodolist.model.Comentario;
 import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
@@ -89,7 +90,7 @@ public class ComentarioController {
     }
 
     @PostMapping("/usuarios/{id}/tareas/{tarea}/comentario")
-    public String nuevaTarea(@PathVariable(value="tarea") Long idTarea, @PathVariable(value="id") Long idUsuario,
+    public String nuevoComentarioTarea(@PathVariable(value="tarea") Long idTarea, @PathVariable(value="id") Long idUsuario,
                              @ModelAttribute TareaData tareaData,
                              @ModelAttribute ComentarioData comentarioData,
                              Model model,
@@ -114,8 +115,8 @@ public class ComentarioController {
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
         model.addAttribute("comentarios", tarea.getComentarios());
-        return "";
-     }
+        return "redirect:/tareas/" + tarea.getId() +"";
+    }
 
 }
 
