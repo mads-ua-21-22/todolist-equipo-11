@@ -42,6 +42,9 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/equipos}">Equipos</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/usuarios/{id}/equipos(id=${userid})}">Mis Equipos</a>
+                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
@@ -77,11 +80,11 @@
             <td th:text="${tarea.id}"></td>
             <td th:text="${tarea.titulo}"></td>
             <td>
-                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
-                <i class="fas fa-pen"></i>
-                </a>
                 <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}(id=${tarea.id})}"/>
                 <i class="fas fa-info-circle"></i>
+                </a>
+                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
+                <i class="fas fa-pen"></i>
                 </a>
                 <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
                         th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
@@ -110,4 +113,31 @@
     <p class="float-right alert alert-info">Total: <b th:text="${tareas.size()}"></b></p>
 </div>
 
+<div class="px-2" th:fragment="tablaEquipoConTareas (equipo)">
+    <table class="table" th:if="${equipo.getTareas().size() > 0}">
+        <caption style="caption-side: top;">Tareas</caption>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tarea</th>
+            <th>Estado</th>
+            <th>Asignada a</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tarea: ${equipo.getTareas()}">
+            <td th:text="${tarea.getId()}"></td>
+            <td th:text="${tarea.getTitulo()}"></td>
+            <td>
+                <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>
+                <p class="text-danger" th:if="${!tarea.isComplete()}">Aún por realizar...</p>
+            </td>
+            <td class="inline-block d-flex">
+                <i class="fas fa-user mr-2 mt-1"></i>
+                <p th:text="${tarea.getUsuario().getNombre()}"></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </html>

@@ -46,6 +46,7 @@ public class Tarea implements Serializable {
 
     @Column(name = "fecha_limite")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaLimite;
 
     // Constructor vacío necesario para JPA/Hibernate.
