@@ -243,7 +243,7 @@ public class EquipoController {
             throw new UsuarioNotFoundException();
         Equipo equipo = equipoService.findById(idEquipo);
         model.addAttribute("usuario",usuario);
-        model.addAttribute("equipo",usuario);
+        model.addAttribute("equipo",equipo);
         return "formNuevaTareaEquipo";
     }
 
