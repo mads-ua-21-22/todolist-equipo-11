@@ -39,6 +39,8 @@ public class Usuario implements Serializable {
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     Set<Tarea> tareas = new HashSet<>();
 
+
+
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "usuarios")
     Set<Equipo> equipos = new HashSet<>();
     // Constructor vacío necesario para JPA/Hibernate.
@@ -54,6 +56,10 @@ public class Usuario implements Serializable {
 
     public Set<Equipo> getEquipos() {
         return equipos;
+    }
+
+    public void setEquipos(Set<Equipo> equipos) {
+        this.equipos = equipos;
     }
 
     public void setUsuarios(Set<Equipo> equipos) {
