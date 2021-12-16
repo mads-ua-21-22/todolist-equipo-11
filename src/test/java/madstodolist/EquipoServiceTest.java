@@ -116,6 +116,7 @@ public class EquipoServiceTest {
     @Test
     @Transactional
     public void deleteUsuarioEquipo() {
+        equipoService.agregarAEquipo(1L, 1L);
         Usuario usuario = usuarioService.findById(1L);
         assertThat(usuario.getEquipos()).hasSize(1);
         equipoService.eliminarDeEquipo(1L, 1L);

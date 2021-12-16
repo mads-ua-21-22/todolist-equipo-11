@@ -46,7 +46,7 @@ public class Equipo implements Serializable {
         this.nombre = nombre;
     }
 
-    public Equipo() {
+    private Equipo() {
     }
 
     public String getNombre() {
