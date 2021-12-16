@@ -6,6 +6,7 @@ import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
+import madstodolist.service.ComentarioService;
 import madstodolist.service.EquipoService;
 import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
@@ -30,6 +31,9 @@ public class TareaController {
 
     @Autowired
     EquipoService equipoService;
+
+    @Autowired
+    ComentarioService comentarioService;
 
     @Autowired
     ManagerUserSession managerUserSession;
@@ -102,7 +106,7 @@ public class TareaController {
         model.addAttribute("tarea",tarea);
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
-        model.addAttribute("comentarios", tarea.getComentarios());
+        model.addAttribute("comentarios", comentarioService.allComentariosTarea(tarea.getId()));
         return "infotarea";
     }
 
@@ -123,7 +127,7 @@ public class TareaController {
         model.addAttribute("equipo",equipo);
         model.addAttribute("usuario",usuario);
         model.addAttribute("tarea",tarea);
-        model.addAttribute("comentarios",tarea.getComentarios());
+        model.addAttribute("comentarios",comentarioService.allComentariosTarea(tarea.getId()));
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
         return "infotareaequipo";
