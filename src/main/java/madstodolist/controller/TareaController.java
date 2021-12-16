@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
@@ -106,12 +107,12 @@ public class TareaController {
         if (tarea == null) {
             throw new TareaNotFoundException();
         }
-
         managerUserSession.comprobarUsuarioLogeado(session, tarea.getUsuario().getId());
 
         model.addAttribute("tarea", tarea);
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
+        tareaData.setFechaLimite(tarea.getFechaLimite());
         return "formEditarTarea";
     }
 
