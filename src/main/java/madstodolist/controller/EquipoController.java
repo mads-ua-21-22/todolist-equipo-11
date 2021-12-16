@@ -259,7 +259,7 @@ public class EquipoController {
             throw new UsuarioNotFoundException();
         //Se le asigna la tarea directamente al usuario que la crea he tenido que hacer esto porque me da un
         //error inexplicable en la DB
-        tareaService.nuevaTareaEquipo(idEquipo,idUsuario,tareaData.getTitulo());
+        tareaService.nuevaTareaEquipo(idEquipo,idUsuario,tareaData.getTitulo(),tareaData.getDescripcion(),tareaData.getFechaLimite());
         flash.addFlashAttribute("mensaje","Tarea creada correctamente");
         return "redirect:/equipos/" + idEquipo;
     }

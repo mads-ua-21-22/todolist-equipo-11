@@ -55,7 +55,7 @@ public class TareaController {
         if (usuario == null) {
             throw new UsuarioNotFoundException();
         }
-        tareaService.nuevaTareaUsuario(idUsuario, tareaData.getTitulo());
+        tareaService.nuevaTareaUsuario(idUsuario, tareaData.getTitulo(),tareaData.getDescripcion(),tareaData.getFechaLimite());
         flash.addFlashAttribute("mensaje", "Tarea creada correctamente");
         return "redirect:/usuarios/" + idUsuario + "/tareas";
      }
@@ -85,6 +85,19 @@ public class TareaController {
         return "listaTareas";
     }
 
+    @GetMapping("/tareas/{id}")
+    public String formTarea(@PathVariable(value = "id") Long idTarea, @ModelAttribute TareaData tareaData,
+                            Model model, HttpSession session) {
+        Tarea tarea = tareaService.findById(idTarea);
+        if (tarea == null)
+            throw new TareaNotFoundException();
+        managerUserSession.comprobarUsuarioLogeado(session,tarea.getUsuario().getId());
+        model.addAttribute("tarea",tarea);
+        tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        return "infotarea";
+    }
+
     @GetMapping("/tareas/{id}/editar")
     public String formEditaTarea(@PathVariable(value="id") Long idTarea, @ModelAttribute TareaData tareaData,
                                  Model model, HttpSession session) {
@@ -98,6 +111,7 @@ public class TareaController {
 
         model.addAttribute("tarea", tarea);
         tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
         return "formEditarTarea";
     }
 
@@ -113,7 +127,7 @@ public class TareaController {
 
         managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
 
-        tareaService.modificaTarea(idTarea, tareaData.getTitulo());
+        tareaService.modificaTarea(idTarea, tareaData.getTitulo(),tareaData.getDescripcion(),tareaData.getFechaLimite());
         flash.addFlashAttribute("mensaje", "Tarea modificada correctamente");
         if((Boolean) session.getAttribute("tareaequipo"))
             return "redirect:/equipos/" + tarea.getEquipo().getId();

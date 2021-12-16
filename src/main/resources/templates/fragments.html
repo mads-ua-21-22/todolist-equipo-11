@@ -52,7 +52,7 @@
                         <td th:text="${username}"></td>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" >
-                        <a class="dropdown-item" href="#">Cuenta</a>
+                        <a class="dropdown-item" href="/modificarPerfil">Cuenta</a>
                         <a class="dropdown-item" href="/logout">Cerrar sesión
                             <td th:text="${username}"></td>
                         </a>
@@ -72,6 +72,7 @@
             <th>Tarea</th>
             <th>Acción</th>
             <th>Estado</th>
+            <th>Completar</th>
         </tr>
         </thead>
         <tbody>
@@ -82,10 +83,21 @@
                 <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
                 <i class="fas fa-pen"></i>
                 </a>
+                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}(id=${tarea.id})}"/>
+                <i class="fas fa-info-circle"></i>
+                </a>
                 <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
                         th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
                     <i class="fas fa-trash"></i>
                 </button>
+            </td>
+            <td>
+                <div th:if="${!tarea.isComplete()}">
+                    <div th:if="${!tarea.nofechaLimite()}">
+                        <p class="text-danger" th:if="${tarea.retrasada()}">Retrasada!</p>
+                        <p class="text-success" th:if="${!tarea.retrasada()}">En Curso</p>
+                    </div>
+                </div>
             </td>
             <td>
                 <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>

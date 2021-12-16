@@ -15,6 +15,10 @@
         <div class="form-group">
             <label for="titulo">Título de la tarea:</label>
             <input class="form-control" id="titulo" name="titulo" required th:field="*{titulo}" type="text"/>
+            <label for="fechaLimite">Fecha</label>
+            <input id="fechaLimite" class="form-control" name="fechaLimite" th:placeholder="${tarea.getFechaLimite()}" th:field="*{fechaLimite}">
+            <label for="descripcion">Descripción de la tarea:</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" th:text="${tarea.getDescripcion()}" ></textarea>
         </div>
         <button class="btn btn-primary" type="submit">Modificar tarea</button>
         <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>

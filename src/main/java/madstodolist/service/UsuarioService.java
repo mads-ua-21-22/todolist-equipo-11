@@ -103,7 +103,14 @@ public class UsuarioService {
         } else {
             return new ArrayList<>();
         }
-
+    }
+    
+    @Transactional
+    public Usuario modificar(Usuario usuario) {
+        Optional<Usuario> usuarioBD = usuarioRepository.findByEmail(usuario.getEmail());
+        if (!usuarioBD.isPresent())
+            throw new UsuarioServiceException("El usuario " + usuario.getEmail() + " no se ha encontrado");
+        else return usuarioRepository.save(usuario);
     }
 
     @Transactional(readOnly = true)
