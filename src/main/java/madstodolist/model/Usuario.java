@@ -36,7 +36,7 @@ public class Usuario implements Serializable {
     // toda su lista de tareas
     // CUIDADO!! No es recomendable hacerlo en aquellos casos en los
     // que la relación pueda traer a memoria una gran cantidad de entidades
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     Set<Tarea> tareas = new HashSet<>();
 
 
