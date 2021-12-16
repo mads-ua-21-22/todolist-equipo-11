@@ -105,7 +105,7 @@ public class ComentarioController {
         }
         if(tarea == null)
             throw new TareaNotFoundException();
-        if(tarea.getUsuario() != usuario)
+        if(!equipo.getUsuarios().contains(usuario))
             throw new UsuarioNotFoundException();
 
         model.addAttribute("usuario", usuario);

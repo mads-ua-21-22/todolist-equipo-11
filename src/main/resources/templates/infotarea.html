@@ -22,11 +22,13 @@
             <label>Descripción de la tarea: </label>
             <p th:text="${tarea.getDescripcion()}"></p>
         </div>
-        <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Editar tarea</a>
-        <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
-        <p><a class="btn btn-primary" th:href="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${tarea.usuario.id}, tarea=${tarea.id})}"> Nuevo comentario</a>
+          <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Editar tarea</a>
+          <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
+         </div>
         <div class="row mt-3">
             <div class="col">
+                <p><a class="btn btn-primary" th:href="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${tarea.usuario.id}, tarea=${tarea.id})}"> Nuevo comentario</a>
+
                 <table class="table table-striped">
                     <thead>
                     <tr>
