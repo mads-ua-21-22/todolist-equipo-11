@@ -36,7 +36,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="comentario: ${comentarios}">
-                        <td th:text="${comentario.usuario}"></td>
+                        <td th:text="${comentario.usuario.getNombre()}"></td>
                         <td th:text="${comentario.comentario}"></td>
                     </tr>
                     </tbody>

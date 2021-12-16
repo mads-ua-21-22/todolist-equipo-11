@@ -23,7 +23,7 @@ public class ComentarioService {
     private ComentarioRepository comentarioRepository;
 
     @Autowired
-    public ComentarioService(UsuarioRepository usuarioRepository, TareaRepository tareaRepository, EquipoRepository equipoRepository) {
+    public ComentarioService(UsuarioRepository usuarioRepository, TareaRepository tareaRepository, ComentarioRepository comentarioRepository) {
         this.usuarioRepository = usuarioRepository;
         this.tareaRepository = tareaRepository;
         this.comentarioRepository = comentarioRepository;
@@ -31,8 +31,8 @@ public class ComentarioService {
 
     @Transactional
     public Comentario nuevoComentarioTarea(Long idUsuario, Long idTarea, String descComentario) {
-        Usuario usuario = usuarioRepository.findById(3L).orElse(null);
-        Tarea tarea = tareaRepository.findById(1L).orElse(null);
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
         if(tarea == null )
             throw new TareaServiceException("No existe la tarea " +idTarea );
         if(usuario == null)

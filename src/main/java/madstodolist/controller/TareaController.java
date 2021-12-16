@@ -123,6 +123,7 @@ public class TareaController {
         model.addAttribute("equipo",equipo);
         model.addAttribute("usuario",usuario);
         model.addAttribute("tarea",tarea);
+        model.addAttribute("comentarios",tarea.getComentarios());
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
         return "infotareaequipo";

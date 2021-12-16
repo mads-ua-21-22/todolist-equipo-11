@@ -24,6 +24,8 @@
         </div>
         <a th:if="${equipo.getLider() == usuario}" class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Editar tarea</a>
         <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
+        <p><a class="btn btn-primary" th:href="@{/usuarios/{id}/equipos/{equipo}/tareas/{tarea}/comentario(id=${tarea.usuario.id}, equipo=${equipo.id} ,tarea=${tarea.id})}"> Nuevo comentario</a>
+
         <div class="row mt-3">
             <div class="col">
                 <table class="table table-striped">
@@ -35,7 +37,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="comentario: ${comentarios}">
-                        <td th:text="${comentario.usuario}"></td>
+                        <td th:text="${comentario.usuario.getNombre()}"></td>
                         <td th:text="${comentario.comentario}"></td>
                     </tr>
                     </tbody>

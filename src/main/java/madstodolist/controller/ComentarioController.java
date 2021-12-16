@@ -60,41 +60,12 @@ public class ComentarioController {
 
         return "formNuevoComentario";
     }
-
-    @GetMapping("usuarios/{userid}/equipos/{id}/tareas/{tarea}/comentario")
-    public String formNuevoComentarioEquipo(@PathVariable(value="userid") Long idUsuario,
-                                            @PathVariable(value="tarea") Long idTarea,
-                                            @PathVariable(value="id") Long idEquipo,
-                                      Model model,
-                                      HttpSession session) {
-
-        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
-
-        Usuario usuario = usuarioService.findById(idUsuario);
-        Tarea tarea = tareaService.findById(idTarea);
-        Equipo equipo = equipoService.findById(idEquipo);
-
-        if (usuario == null) {
-            throw new UsuarioNotFoundException();
-        }
-        if(tarea == null)
-            throw new TareaNotFoundException();
-        if(!equipo.getUsuarios().contains(usuario))
-            throw new UsuarioNotFoundException();
-
-        model.addAttribute("usuario", usuario);
-        model.addAttribute("tarea", tarea);
-        model.addAttribute("comentarioData", new ComentarioData());
-
-        return "formNuevoComentario";
-    }
-
     @PostMapping("/usuarios/{id}/tareas/{tarea}/comentario")
     public String nuevoComentarioTarea(@PathVariable(value="tarea") Long idTarea, @PathVariable(value="id") Long idUsuario,
-                             @ModelAttribute TareaData tareaData,
-                             @ModelAttribute ComentarioData comentarioData,
-                             Model model,
-                             HttpSession session) {
+                                       @ModelAttribute TareaData tareaData,
+                                       @ModelAttribute ComentarioData comentarioData,
+                                       Model model,
+                                       HttpSession session) {
 
         managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
 
@@ -118,5 +89,68 @@ public class ComentarioController {
         return "redirect:/tareas/" + tarea.getId() +"";
     }
 
+    @GetMapping("/usuarios/{id}/equipos/{equipos}/tareas/{tarea}/comentario")
+    public String formNuevoComentarioEquipo(@PathVariable(value="tarea") Long idTarea,
+                                      @PathVariable(value="equipos") Long idEquipo,
+                                      @PathVariable(value="id") Long idUsuario, Model model,
+                                      HttpSession session) {
+
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        Tarea tarea = tareaService.findById(idTarea);
+        Equipo equipo = equipoService.findById(idEquipo);
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        if(tarea == null)
+            throw new TareaNotFoundException();
+        if(tarea.getUsuario() != usuario)
+            throw new UsuarioNotFoundException();
+
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("tarea", tarea);
+        model.addAttribute("equipo", equipo);
+        model.addAttribute("comentarioData", new ComentarioData());
+
+        return "formNuevoComentarioEquipo";
+    }
+
+
+
+    @PostMapping("/usuarios/{id}/equipos/{equipos}/tareas/{tarea}/comentario")
+    public String nuevoComentarioEquipo(@PathVariable(value="tarea") Long idTarea,
+                                        @PathVariable(value="id") Long idUsuario,
+                                        @PathVariable(value="equipos") Long idEquipo,
+                                       @ModelAttribute TareaData tareaData,
+                                       @ModelAttribute ComentarioData comentarioData,
+                                       Model model,
+                                       HttpSession session) {
+
+        managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        Tarea tarea = tareaService.findById(idTarea);
+        Equipo equipo = equipoService.findById(idEquipo);
+
+        if (usuario == null) {
+            throw new UsuarioNotFoundException();
+        }
+        if(tarea == null)
+            throw new TareaNotFoundException();
+        if(!equipo.getUsuarios().contains(usuario))
+            throw new UsuarioNotFoundException();
+
+        comentarioService.nuevoComentarioTarea(idUsuario,idTarea,comentarioData.getComentario());
+
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("tarea",tarea);
+        model.addAttribute("equipo",equipo);
+
+        tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        model.addAttribute("comentarios", tarea.getComentarios());
+        return "redirect:/equipos/" + equipo.getId() +"/tareas/" +tarea.getId() +"";
+    }
 }
 
