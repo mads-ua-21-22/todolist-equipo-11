@@ -9,7 +9,7 @@ public class TareaData {
 
     private String descripcion;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaLimite;
 
     public String getTitulo() {

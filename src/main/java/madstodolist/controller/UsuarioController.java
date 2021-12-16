@@ -5,6 +5,7 @@ import madstodolist.authentication.ManagerUserSession;
 import madstodolist.authentication.UsuarioNoAdminException;
 import madstodolist.authentication.UsuarioNoLogeadoException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
+import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.service.TareaService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -124,5 +126,22 @@ public class UsuarioController {
     public String cambiaBloqueado(@PathVariable(value="id") Long id,Model model, HttpSession session) {
         usuarioService.cambiaEstadoBloqueado(id);
         return "redirect:/usuarios";
+    }
+
+    @GetMapping("/usuarios/{id}/equipos")
+    public String getEquiposDeUsuarios(@PathVariable(value = "id") Long id, Model model, HttpSession session) {
+        // comprobamos que esté logueado este usuario
+        // nota: al comprobar el logueo ya comprobamos si existe usuario con ese id
+        if(!managerUserSession.comprobarUsuarioLogeado(session, id)) {
+            throw new UsuarioNoLogeadoException();
+        }
+
+        // obtenemos usuario y sus equipos
+        Usuario usuario = usuarioService.findById(id);
+        List<Equipo> equipos = new ArrayList<>(usuarioService.allEquiposUsuario(id));
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("equipos", equipos);
+
+        return "listaEquiposUsuario";
     }
 }
