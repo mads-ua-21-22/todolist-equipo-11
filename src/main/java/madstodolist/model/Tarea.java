@@ -56,7 +56,7 @@ public class Tarea implements Serializable {
     // toda su lista de tareas
     // CUIDADO!! No es recomendable hacerlo en aquellos casos en los
     // que la relación pueda traer a memoria una gran cantidad de entidades
-    @OneToMany(mappedBy = "tarea", fetch = FetchType.EAGER,cascade=CascadeType.REMOVE)
+    @OneToMany(mappedBy = "tarea", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     Set<Comentario> comentarios = new HashSet<>();
 
     // Constructor vacío necesario para JPA/Hibernate.

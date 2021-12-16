@@ -32,7 +32,7 @@ public class Comentario implements Serializable {
 
     @NotNull
     // Relación muchos-a-uno entre tareas y usuario
-    @ManyToOne(cascade=CascadeType.REMOVE)
+    @ManyToOne
     // Nombre de la columna en la BD que guarda físicamente
     // el ID del usuario con el que está asociado una tarea
     @JoinColumn(name = "usuario_id")
