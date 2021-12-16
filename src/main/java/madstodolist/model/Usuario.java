@@ -1,5 +1,7 @@
 package madstodolist.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,6 +28,7 @@ public class Usuario implements Serializable {
 
     @Column(name = "fecha_nacimiento")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
 
     // Definimos el tipo de fetch como EAGER para que
