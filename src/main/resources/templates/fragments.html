@@ -42,6 +42,9 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/equipos}">Equipos</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/usuarios/{id}/equipos(id=${userid})}">Mis Equipos</a>
+                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
@@ -98,4 +101,31 @@
     <p class="float-right alert alert-info">Total: <b th:text="${tareas.size()}"></b></p>
 </div>
 
+<div th:fragment="tablaEquipoConTareas (equipo)">
+    <div class="">
+        <table class="table">
+            <caption style="caption-side: top;" th:text="${equipo.getNombre()}"></caption>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tarea</th>
+                <th>Estado</th>
+                <th>Asignada a</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tarea: ${tareas}">
+                <td th:text="${tarea.id}"></td>
+                <td th:text="${tarea.titulo}"></td>
+                <td>
+                    <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>
+                    <p class="text-danger" th:if="${!tarea.isComplete()}">Aún por realizar...</p>
+                </td>
+                <i class="fas fa-person"></i>
+                <td th:text="${tarea.getUsuario().getNombre()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </html>

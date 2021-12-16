@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head (titulo='Mis equipos')"></head>
+<body>
+    <div class="container-fluid">
+        <header th:replace="fragments :: header (esAdmin=${usuario.getAdministrador()}, username=${usuario.getNombre()}, userid=${usuario.getId()})"></header>
+        <div class="titulo">
+            <p>Mis Equipos</p>
+        </div>
+        <div th:if="${equipos.size() > 0}" th:each="equipo: ${equipos}" th:insert="fragments :: tablaEquipoConTareas (equipo=${equipo})"></div>
+    </div>
+    <div th:replace="fragments::javascript"/>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package madstodolist.service;
 
 import madstodolist.controller.exception.UsuarioNotFoundException;
+import madstodolist.model.Equipo;
 import madstodolist.model.Usuario;
 import madstodolist.model.UsuarioRepository;
 import org.slf4j.Logger;
@@ -92,6 +93,17 @@ public class UsuarioService {
             usuario.setBloqueado(false);
         }
         usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public List<Equipo> allEquiposUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if(usuario != null){
+            return new ArrayList<>(usuario.getEquipos());
+        } else {
+            return new ArrayList<>();
+        }
+
     }
 
     @Transactional(readOnly = true)
