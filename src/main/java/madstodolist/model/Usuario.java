@@ -1,5 +1,7 @@
 package madstodolist.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,6 +28,7 @@ public class Usuario implements Serializable {
 
     @Column(name = "fecha_nacimiento")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
 
     // Definimos el tipo de fetch como EAGER para que
@@ -35,6 +38,8 @@ public class Usuario implements Serializable {
     // que la relación pueda traer a memoria una gran cantidad de entidades
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     Set<Tarea> tareas = new HashSet<>();
+
+
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "usuarios")
     Set<Equipo> equipos = new HashSet<>();
@@ -54,6 +59,10 @@ public class Usuario implements Serializable {
 
     public Set<Equipo> getEquipos() {
         return equipos;
+    }
+
+    public void setEquipos(Set<Equipo> equipos) {
+        this.equipos = equipos;
     }
 
     public void setUsuarios(Set<Equipo> equipos) {

@@ -16,7 +16,7 @@
             <label for="titulo">Título de la tarea:</label>
             <input class="form-control" id="titulo" name="titulo" required th:field="*{titulo}" type="text"/>
             <label for="fechaLimite">Fecha</label>
-            <input id="fechaLimite" class="form-control" name="fechaLimite" th:placeholder="01-12-2019" th:field="*{fechaLimite}">
+            <input id="fechaLimite" class="form-control" name="fechaLimite" th:placeholder="01-12-2019" th:field="*{fechaLimite}" type="date" />
             <label for="descripcion">Descripción de la tarea:</label>
             <textarea class="form-control" id="descripcion" th:field="*{descripcion}" name="descripcion"></textarea>
         </div>

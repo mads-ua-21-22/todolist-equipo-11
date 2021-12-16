@@ -34,12 +34,19 @@ public class Equipo implements Serializable {
     @Column(columnDefinition = "varchar(255) default ''")
     private String descripcion;
 
+    //Relacion muchos-a-uno entre equipos y usuario
+    @ManyToOne
+    //Nombre de la columna en la BD que guarda fisicamente
+    //el ID del lider con el que está asociado el equipo
+    @JoinColumn(name = "lider")
+    private Usuario lider;
+
     // Constructor público con los atributos obligatorios. En este caso el correo electrónico.
     public Equipo(String nombre) {
         this.nombre = nombre;
     }
 
-    public Equipo() {
+    private Equipo() {
     }
 
     public String getNombre() {
@@ -78,6 +85,9 @@ public class Equipo implements Serializable {
 
     public Set<Tarea> getTareas(){return tareas;}
 
+    public Usuario getLider() { return  lider; }
+
+    public void setLider(Usuario lider) { this.lider = lider; }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

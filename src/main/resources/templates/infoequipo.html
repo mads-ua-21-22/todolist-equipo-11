@@ -11,6 +11,7 @@
         <div class="row mt-3">
             <div class="col">
                 <h2 th:text="'Listado de usuarios que componen el equipo ' + ${equipo.getNombre()} "></h2>
+                <h4 th:if="${equipo.getLider()}" th:text="'El lider del equipo es: ' + ${equipo.getLider().getNombre()} "></h4>
             </div>
         </div>
         <div class="subTitle mt-md-4">
@@ -24,13 +25,13 @@
                     <thead>
                     <tr>
                         <th>Usuarios</th>
-                        <th th:if="${usuario.getAdministrador()}" >Accion</th>
+                        <th th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}" >Accion</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="usuar: ${usuarios}">
                         <td th:text="${usuar.nombre}"></td>
-                        <td th:if="${usuario.getAdministrador()}">
+                        <td th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}">
                             <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
                                     th:onclick="'delu(\'/equipo/'+${equipo.id}+'/'+${usuar.id}+'\')'">Borrar miembro</button>
 
@@ -51,11 +52,11 @@
 
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" th:if="${aparezco}">
         <div class="row p-3">
             <div class="col">
                 <h2 class="d-inline" th:text="'Listado de tareas de ' + ${equipo.nombre}"></h2>
-                <a class="btn btn-primary float-right d-inline" th:href="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}">
+                <a th:if="${equipo.getLider() == usuario}" class="btn btn-primary float-right d-inline" th:href="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}">
                     <i class="fas fa-plus"></i>
                 </a>
             </div>
@@ -67,13 +68,13 @@
                 <label class="text-success ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas == 1}">¡Todas hechas!</label>
             </div>
         </div>
-        <div class="row p-2">
+        <div class="row p-2" th:if="${aparezco}">
             <div class="col">
-                <div th:replace="fragments :: tablaTareas(tareas=${tareasNoCompletadas}, titulo='Tareas no completadas')"></div>
+                <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo},usuario=${usuario},tareas=${tareasNoCompletadas}, titulo='Tareas no completadas')"></div>
                 <div th:if="${tareasNoCompletadas.size() == 0}" class="alert alert-info" role="alert">
                     No tienes tareas por hacer. ¡Empieza ahora!
                 </div>
-                <div th:replace="fragments :: tablaTareas(tareas=${tareasCompletadas}, titulo='Tareas completadas')"></div>
+                <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo}, usuario=${usuario}, tareas=${tareasCompletadas}, titulo='Tareas completadas')"></div>
             </div>
         </div>
         <div class="row mt-2">

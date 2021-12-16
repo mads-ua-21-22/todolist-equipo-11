@@ -2,8 +2,10 @@ package madstodolist;
 
 import madstodolist.authentication.ManagerUserSession;
 import madstodolist.model.Equipo;
+import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.service.EquipoService;
+import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import madstodolist.service.UsuarioServiceException;
 import org.junit.jupiter.api.Assertions;
@@ -35,6 +37,8 @@ public class EquipoWebTest {
     private MockMvc mockMvc;
     @MockBean
     private UsuarioService usuarioService;
+    @MockBean
+    private TareaService tareaService;
     @MockBean
     private EquipoService equipoService;
     // Al mocker el manegerUserSession, no lanza la excepción cuando
@@ -121,7 +125,7 @@ public class EquipoWebTest {
         this.mockMvc.perform(post("/equipos/1/agregar"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/equipos"));
+                .andExpect(redirectedUrl("/equipos/1"));
     }
 
     @Test
@@ -167,4 +171,16 @@ public class EquipoWebTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/equipos"));
     }
+
+    @Test
+    public void vistaInfoTareaEquipoBloqueada() throws Exception {
+        this.mockMvc.perform(get("/equipos/1/tareas/1"))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void agregarTareaAEquipoBloqueado() throws Exception {
+        this.mockMvc.perform(get("/equipos/1/tareas/nueva"))
+                .andExpect(status().isNotFound());
+    }
+
 }

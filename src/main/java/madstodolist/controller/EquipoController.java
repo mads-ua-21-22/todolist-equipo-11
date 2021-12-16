@@ -131,7 +131,7 @@ public class EquipoController {
         equipoService.agregarAEquipo(idUsuario,idEquipo);
 
         flash.addFlashAttribute("mensaje", "Agregado al equipo correctamente");
-        return "redirect:/equipos";
+        return "redirect:/equipos/" + idEquipo;
     }
 
     @DeleteMapping("/equipos/{id}")
@@ -221,11 +221,12 @@ public class EquipoController {
                                      HttpSession session){
         Long idlogin = (Long) session.getAttribute("idUsuarioLogeado");
         managerUserSession.comprobarUsuarioLogeado(session,idlogin);
+        Equipo equipo = equipoService.findById(idEquipo);
 
         Usuario usuario = usuarioService.findById(idlogin);
         if(usuario == null)
             throw new UsuarioNotFoundException();
-        if(!usuario.getAdministrador())
+        if(equipo.getLider() != usuario && !usuario.getAdministrador())
             throw new UsuarioNoAdminException();
         equipoService.eliminarDeEquipo(idUsuario,idEquipo);
         return "";
@@ -243,7 +244,7 @@ public class EquipoController {
             throw new UsuarioNotFoundException();
         Equipo equipo = equipoService.findById(idEquipo);
         model.addAttribute("usuario",usuario);
-        model.addAttribute("equipo",usuario);
+        model.addAttribute("equipo",equipo);
         return "formNuevaTareaEquipo";
     }
 

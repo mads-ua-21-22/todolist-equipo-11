@@ -77,7 +77,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/modificarPerfil")
-    public String descripcionUsuario(Model model, HttpSession session) {
+    public String descripcionUsuario(@ModelAttribute ModificaData modificaData,Model model, HttpSession session) {
         //Para comprobar si el usuario si existe y si esta logeado (Evitar error null)
         Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
 
@@ -89,7 +89,11 @@ public class UsuarioController {
             throw new UsuarioNotFoundException();
         }
         model.addAttribute("user",usuarioSesion);
-        model.addAttribute("modificaData", new ModificaData());
+        modificaData.setNombre(usuarioSesion.getNombre());
+        modificaData.setPassword("");
+        modificaData.setActualpassword("");
+        modificaData.setPassword2("");
+        modificaData.setFechaNacimiento(usuarioSesion.getFechaNacimiento());
         return "formModificaCuenta";
     }
 
