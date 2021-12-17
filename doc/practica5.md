@@ -15,10 +15,10 @@ Semana 1:
 ![alt text](TODOLISTSPRINT1.png)
 
 Semana 2:
-![alt text](MadsWEEK2.png)
+![alt text](MadsWEEK2.PNG)
 
 Semana 3:
-![alt text](MadsWEEK3.png)
+![alt text](MadsWEEK3.PNG)
 
 Semana 4:
 
