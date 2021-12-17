@@ -26,22 +26,6 @@ public class ComentarioTest {
     @Autowired
     private ComentarioRepository comentarioRepository;
 
-    @Test
-    @Transactional
-    public void grabarComentario() {
-        // GIVEN
-        Usuario usuario = new Usuario("test@ua");
-        Tarea tarea = new Tarea(usuario,"Titulo");
-        Comentario comentario = new Comentario(usuario,tarea,"Un comentario más");
-
-        // WHEN
-        usuarioRepository.save(usuario);
-        tareaRepository.save(tarea);
-        comentarioRepository.save(comentario);
-
-        // THEN
-        assertThat(comentario.getId()).isNotNull();
-    }
 
     @Test
     public void comprobarIgualdadComentarios() {

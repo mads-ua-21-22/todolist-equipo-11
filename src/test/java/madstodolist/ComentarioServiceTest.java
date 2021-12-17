@@ -61,14 +61,13 @@ public class ComentarioServiceTest {
 
     @Test
     @Transactional
-    public void creaEquipos() {
+    public void creaComentarios() {
         List<Comentario> comentarios = comentarioService.allComentariosTarea(1L);
         // THEN
         assertThat(comentarios).hasSize(1);
         Comentario comentario = new Comentario(usuarioService.findById(1L),
                 tareaService.findById(1L),"Otro comentario");
         Tarea tarea = tareaService.findById(1L);
-        tarea.getComentarios().add(comentario);
         assertThat(tarea.getComentarios()).hasSize(2);
     }
 }
