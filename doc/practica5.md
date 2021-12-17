@@ -10,6 +10,18 @@
 ## *Resumen*
 En esta práctica hemos agregado nuevas funcionalidades que han sido pensadas entre los miembros del equipo para tratar de mejorar la Web y aprender a trabajar en equipo.
 
+## *Desarrollo de Trello*
+Semana 1:
+![alt text](TODOLISTSPRINT1.png)
+
+Semana 2:
+![alt text](MadsWEEK2.png)
+
+Semana 3:
+![alt text](MadsWEEK3.png)
+
+Semana 4:
+
 ## *Forma de trabajar y Pair Programming*
 Hemos trabajado de la forma que hemos ido siguiendo en las prácticas anteriores: creabamos una nueva rama a partir de Develop en lugar de Main, y para cada funcionalidad se trabajaba en una rama distinta. Respecto al código hemos trabajado principal comenzando con el Objeto/Service y después con el Controller, Vista y por último tests en caso de ser necesario.
 Dado que en esta práctica lo que hemos hecho ha sido ampliar funcionalidades, hay tests que han sido refactorizados ligeramente en lugar de crear un nuevo test.
