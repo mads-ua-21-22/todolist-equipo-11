@@ -243,6 +243,9 @@ public class EquipoController {
         if(usuario == null)
             throw new UsuarioNotFoundException();
         Equipo equipo = equipoService.findById(idEquipo);
+        if(equipo.getLider() != usuario)
+            throw new UsuarioNotFoundException();
+
         model.addAttribute("usuario",usuario);
         model.addAttribute("equipo",equipo);
         return "formNuevaTareaEquipo";
