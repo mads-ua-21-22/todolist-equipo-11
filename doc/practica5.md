@@ -72,6 +72,153 @@ Estos son algunos ejemplos en código:
     }
 `````
 
+```javascript
+@GetMapping("/equipos/{id}/tareas/nueva")
+public String formNuevaTarea(@PathVariable(value = "id") Long idEquipo,
+@ModelAttribute TareaData tareaData,Model model,
+HttpSession session) {
+Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if(usuario == null)
+            throw new UsuarioNotFoundException();
+        Equipo equipo = equipoService.findById(idEquipo);
+        if(equipo.getLider() != usuario)
+            throw new UsuarioNotFoundException();
+
+        model.addAttribute("usuario",usuario);
+        model.addAttribute("equipo",equipo);
+        return "formNuevaTareaEquipo";
+    }
+````
+### Podemos modificar nuestros datos de Usuario
+
+Lo que se ha realizado en esta funcionalidad es darle uso a un boton que teníamos si utilizar todavía en el NavBar.
+
+Para realizar esta función, hemos creado ModificaData con los siguientes parametros:
+Cabe destacar el uso de 3 contraseñas, 2 hacen referencia a la nueva por lo que tendrán que ser iguales y 1 hace referencia a la Actual.
+
+```javascript
+private String actualpassword;
+    private String password;
+    private String password2;
+    private String nombre;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaNacimiento;
+````
+
+Y tras el Data se ha creado el controllador para acceder a la vista y obtener los datos del formulario:
+```javascript
+@GetMapping("/modificarPerfil")
+public String modificarPerfil(@ModelAttribute ModificaData modificaData,Model model, HttpSession session) {
+//Para comprobar si el usuario si existe y si esta logeado (Evitar error null)
+Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+
+        managerUserSession.comprobarExisteUsuario(idUsuario);
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+        //Comprobamos usuario de la SESION
+        Usuario usuarioSesion = usuarioService.findById(idUsuario);
+        if (usuarioSesion == null) {
+            throw new UsuarioNotFoundException();
+        }
+        model.addAttribute("user",usuarioSesion);
+        modificaData.setNombre(usuarioSesion.getNombre());
+        modificaData.setPassword("");
+        modificaData.setActualpassword("");
+        modificaData.setPassword2("");
+        modificaData.setFechaNacimiento(usuarioSesion.getFechaNacimiento());
+        return "formModificaCuenta";
+    }
+ ````
+
+```javascript
+    @PostMapping("/modificarPerfil")
+public String modificarPerfil(@Valid ModificaData modificaData, BindingResult result, Model model,
+    HttpSession session) {
+
+    Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+    Usuario user = usuarioService.findById(idUsuario);
+    model.addAttribute("user",user);
+    model.addAttribute("modificaData", new ModificaData());
+
+    if (result.hasErrors()) {
+        model.addAttribute("error", "Asegurate de que el formato de la fecha es DD-MM-YYYY");
+        return "formModificaCuenta";
+    }
+
+    if(!modificaData.getActualpassword().equals(user.getPassword())) {
+        model.addAttribute("error", "La contraseña actual es errónea");
+        return "formModificaCuenta";
+    }
+    else if(!modificaData.getPassword().equals(modificaData.getPassword2())) {
+        model.addAttribute("error", "Las contraseñas no coinciden ");
+        return "formModificaCuenta";
+    }
+    user.setPassword(modificaData.getPassword());
+    user.setFechaNacimiento(modificaData.getFechaNacimiento());
+    user.setNombre(modificaData.getNombre());
+    usuarioService.modificar(user);
+    return "redirect:/modificarPerfil";
+}
+ ````
+
+Algo a tener en cuenta fue la modificación de Fecha para que aparezca el calendario al Clicar en el input, por lo que estos son los códigos asociados a dicho cambio:
+```javascript
+@DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaNacimiento;
+````
+
+```javascript
+<input id="fechaNacimiento" class="form-control" name="fechaNacimiento"
+       th:field="*{fechaNacimiento}" type="date"/>
+````
+
+Ademas cabe destacar que en la vista, los inputs aparecen como Requeridos, por lo que no puedes dejar ninguno en blanco.
+
+### Podemos comentar en las tareas
+
+Se puede comentar en las Tareas de uno mismo asi como en las tareas de un equipo si aparecemos en la lista de usuarios de dicho equipo.
+Para comentar las tareas se ha tenido que crear un objeto relacionado con Tareas y Usuarios y no aceptara nulo en estos campos.
+
+Se ha creado un service para guardar los comentarios en una Tarea y otro para obtener todos los comentarios de una Tarea.
+Dado que bastante código es parecido a otro que ya se ha mostrado, pasamos a los Tests:
+
+Se han realizado tests para comprobar el funcionamiento del Objeto y del Servicio ya que la Web es comprobada en otros.
+
+Los tests del objeto comprueban su conexión con la base de datos.
+
+Los tests del Service comprueba si funciona correctamente FindAll, la obtencion de comentarios así como su agregación a una tarea ya existente.
+
+Tests de ejemplo:
+
+```javascript
+    @Test
+    public void comprobarRecuperarComentario() {
+
+        Comentario comentario = comentarioRepository.findById(1L).orElse(null);
+
+        // THEN
+        assertThat(comentario).isNotNull();
+        assertThat(comentario.getId()).isEqualTo(1L);
+        assertThat(comentario.getComentario()).isEqualTo("Un comentario más");
+    }
+```
+
+```javascript
+    @Test
+    @Transactional
+    public void creaComentarios() {
+        List<Comentario> comentarios = comentarioService.allComentariosTarea(1L);
+        // THEN
+        assertThat(comentarios).hasSize(1);
+        Comentario comentario = new Comentario(usuarioService.findById(1L),
+        tareaService.findById(1L),"Otro comentario");
+        Tarea tarea = tareaService.findById(1L);
+        assertThat(tarea.getComentarios()).hasSize(2);
+    }
+```
+
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
 Los scripts de .sql se encuentran en mi-host. Uno es el principal schema-final.sql y el otro es schema-final-X.sql

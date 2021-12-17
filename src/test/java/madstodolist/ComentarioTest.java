@@ -49,11 +49,7 @@ public class ComentarioTest {
     }
 
     @Test
-    public void comprobarRecuperarEquipo() {
-        // GIVEN
-        // En el application.properties se cargan los datos de prueba del fichero datos-test.sql
-
-        // WHEN
+    public void comprobarRecuperarComentario() {
 
         Comentario comentario = comentarioRepository.findById(1L).orElse(null);
 
