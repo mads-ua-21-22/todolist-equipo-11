@@ -221,4 +221,5 @@ Tests de ejemplo:
 
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
+
 Los scripts de .sql se encuentran en mi-host. Uno es el principal schema-final.sql y el otro es schema-final-X.sql
