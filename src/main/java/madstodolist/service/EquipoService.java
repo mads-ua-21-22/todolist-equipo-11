@@ -53,6 +53,10 @@ public class EquipoService {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
         equipo.addUsuario(usuario);
+        if(equipo.getLider() == null) {
+            equipo.setLider(usuario);
+            equipoRepository.save(equipo);
+        }
         return equipo;
     }
 
@@ -61,6 +65,10 @@ public class EquipoService {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
         equipo.deleteUsuario(usuario);
+        if(equipo.getLider().equals(usuario)){
+            equipo.setLider(null);
+            equipoRepository.save(equipo);
+        }
         return equipo;
     }
     @Transactional

@@ -4,7 +4,7 @@
 <head th:replace="fragments :: head (titulo='Login')"></head>
 
 <body>
-<header th:replace="fragments:: header (esAdmin=${tarea.usuario.getAdministrador()} ,username=${tarea.usuario.nombre}, userid=${tarea.usuario.id})"> </header>
+<header th:replace="fragments:: header (esAdmin=${usuario.getAdministrador()} ,username=${usuario.nombre}, userid=${usuario.id})"> </header>
 
 <div class="container-fluid">
 
@@ -22,13 +22,11 @@
             <label>Descripción de la tarea: </label>
             <p th:text="${tarea.getDescripcion()}"></p>
         </div>
-          <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Editar tarea</a>
-          <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
-         </div>
+        <a th:if="${equipo.getLider() == usuario}" class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}">Editar tarea</a>
+        <a class="btn btn-link" href="javascript:history.back(1)">Cancelar</a>
         <div class="row mt-3">
             <div class="col">
-                <p><a class="btn btn-primary" th:href="@{/usuarios/{id}/tareas/{tarea}/comentario(id=${tarea.usuario.id}, tarea=${tarea.id})}"> Nuevo comentario</a>
-
+                <p><a class="btn btn-primary" th:href="@{/usuarios/{id}/equipos/{equipo}/tareas/{tarea}/comentario(id=${usuario.id}, equipo=${equipo.id} ,tarea=${tarea.id})}"> Nuevo comentario</a>
                 <table class="table table-striped">
                     <thead>
                     <tr>

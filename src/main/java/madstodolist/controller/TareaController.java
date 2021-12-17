@@ -3,8 +3,11 @@ package madstodolist.controller;
 import madstodolist.authentication.ManagerUserSession;
 import madstodolist.controller.exception.TareaNotFoundException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
+import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
+import madstodolist.service.ComentarioService;
+import madstodolist.service.EquipoService;
 import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,12 @@ public class TareaController {
 
     @Autowired
     TareaService tareaService;
+
+    @Autowired
+    EquipoService equipoService;
+
+    @Autowired
+    ComentarioService comentarioService;
 
     @Autowired
     ManagerUserSession managerUserSession;
@@ -92,11 +101,36 @@ public class TareaController {
         Tarea tarea = tareaService.findById(idTarea);
         if (tarea == null)
             throw new TareaNotFoundException();
+
         managerUserSession.comprobarUsuarioLogeado(session,tarea.getUsuario().getId());
         model.addAttribute("tarea",tarea);
         tareaData.setTitulo(tarea.getTitulo());
         tareaData.setDescripcion(tarea.getDescripcion());
+        model.addAttribute("comentarios", comentarioService.allComentariosTarea(tarea.getId()));
         return "infotarea";
+    }
+
+    @GetMapping("/equipos/{equipo}/tareas/{id}")
+    public String formTareaEquipo(@PathVariable(value = "equipo") Long idEquipo,@PathVariable(value = "id") Long idTarea, @ModelAttribute TareaData tareaData,
+                            Model model, HttpSession session) {
+        Tarea tarea = tareaService.findById(idTarea);
+        if (tarea == null)
+            throw new TareaNotFoundException();
+
+        Usuario usuario = usuarioService.findById(managerUserSession.usuarioLogeado(session));
+        Equipo equipo = equipoService.findById(idEquipo);
+
+        if(!equipo.getUsuarios().contains(usuario))
+            throw new UsuarioNotFoundException();
+        if(!equipo.getTareas().contains(tarea))
+            throw new TareaNotFoundException();
+        model.addAttribute("equipo",equipo);
+        model.addAttribute("usuario",usuario);
+        model.addAttribute("tarea",tarea);
+        model.addAttribute("comentarios",comentarioService.allComentariosTarea(tarea.getId()));
+        tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        return "infotareaequipo";
     }
 
     @GetMapping("/tareas/{id}/editar")

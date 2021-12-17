@@ -1,5 +1,7 @@
 package madstodolist.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,6 +28,7 @@ public class Usuario implements Serializable {
 
     @Column(name = "fecha_nacimiento")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
 
     // Definimos el tipo de fetch como EAGER para que
@@ -33,11 +36,16 @@ public class Usuario implements Serializable {
     // toda su lista de tareas
     // CUIDADO!! No es recomendable hacerlo en aquellos casos en los
     // que la relación pueda traer a memoria una gran cantidad de entidades
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     Set<Tarea> tareas = new HashSet<>();
+
+
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "usuarios")
     Set<Equipo> equipos = new HashSet<>();
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    Set<Comentario> comentarios = new HashSet<>();
     // Constructor vacío necesario para JPA/Hibernate.
     // Lo hacemos privado para que no se pueda usar desde el código de la aplicación. Para crear un
     // usuario en la aplicación habrá que llamar al constructor público. Hibernate sí que lo puede usar, a pesar
@@ -53,8 +61,20 @@ public class Usuario implements Serializable {
         return equipos;
     }
 
+    public void setEquipos(Set<Equipo> equipos) {
+        this.equipos = equipos;
+    }
+
     public void setUsuarios(Set<Equipo> equipos) {
         this.equipos = equipos;
+    }
+
+    public Set<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(Set<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
 
     public Long getId() {

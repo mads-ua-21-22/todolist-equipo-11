@@ -63,6 +63,56 @@
     </nav>
 </div>
 
+<div th:if="${tareas.size() > 0}" th:fragment="tablaEquipoTareas(equipo, usuario, tareas, titulo)">
+    <table class="table">
+        <caption style="caption-side: top;" th:text="${titulo}"></caption>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tarea</th>
+            <th>Acción</th>
+            <th>Estado</th>
+            <th>Completar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tarea: ${tareas}">
+            <td th:text="${tarea.id}"></td>
+            <td th:text="${tarea.titulo}"></td>
+            <td>
+                <a class="btn btn-primary btn-xs" th:href="@{{equipo}/tareas/{id}(equipo=${equipo.id},id=${tarea.id})}"/>
+                <i class="fas fa-info-circle"></i>
+                </a>
+                <a th:if="${equipo.lider == usuario}" class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
+                <i th:if="${equipo.lider == usuario}" class="fas fa-pen"></i>
+                </a>
+                <button th:if="${equipo.lider == usuario}" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                        th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+            <td>
+                <div th:if="${!tarea.isComplete()}">
+                    <div th:if="${!tarea.nofechaLimite()}">
+                        <p class="text-danger" th:if="${tarea.retrasada()}">Retrasada!</p>
+                        <p class="text-success" th:if="${!tarea.retrasada()}">En Curso</p>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>
+                <form th:if="${!tarea.isComplete()}" method="post" th:action="@{/tareas/{id}/completada(id=${tarea.getId()})}" >
+                    <button class="btn btn-warning" type="submit">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="float-right alert alert-info">Total: <b th:text="${tareas.size()}"></b></p>
+</div>
+
 <div th:if="${tareas.size() > 0}" th:fragment="tablaTareas(tareas, titulo)">
     <table class="table">
         <caption style="caption-side: top;" th:text="${titulo}"></caption>

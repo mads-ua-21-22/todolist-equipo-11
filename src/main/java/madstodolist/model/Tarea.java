@@ -8,7 +8,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tareas")
@@ -49,6 +51,14 @@ public class Tarea implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaLimite;
 
+    // Definimos el tipo de fetch como EAGER para que
+    // cualquier consulta que devuelve un usuario rellene automáticamente
+    // toda su lista de tareas
+    // CUIDADO!! No es recomendable hacerlo en aquellos casos en los
+    // que la relación pueda traer a memoria una gran cantidad de entidades
+    @OneToMany(mappedBy = "tarea", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    Set<Comentario> comentarios = new HashSet<>();
+
     // Constructor vacío necesario para JPA/Hibernate.
     // Lo hacemos privado para que no se pueda usar desde el código de la aplicación. Para crear un
     // usuario en la aplicación habrá que llamar al constructor público. Hibernate sí que lo puede usar, a pesar
@@ -68,6 +78,14 @@ public class Tarea implements Serializable {
         this.titulo = titulo;
         this.equipo = equipo;
         equipo.getTareas().add(this);
+    }
+
+    public void setComentarios(Set<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public Set<Comentario> getComentarios() {
+        return comentarios;
     }
 
     public Long getId() {
