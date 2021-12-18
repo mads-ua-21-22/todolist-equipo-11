@@ -21,14 +21,14 @@ public class Equipo implements Serializable {
     private String nombre;
 
     //Relacion Equipo Tareas
-    @OneToMany(mappedBy =  "equipo",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy =  "equipo",fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     Set<Tarea> tareas = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "equipo_usuario",
-            joinColumns = @JoinColumn(name = "fk_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "fk_equipo"))
+            joinColumns = { @JoinColumn(name = "fk_equipo") },
+            inverseJoinColumns = { @JoinColumn(name = "fk_usuario") })
     Set<Usuario> usuarios = new HashSet<>();
 
     @Column(columnDefinition = "varchar(255) default ''")
