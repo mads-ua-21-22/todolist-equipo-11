@@ -77,7 +77,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/modificarPerfil")
-    public String descripcionUsuario(@ModelAttribute ModificaData modificaData,Model model, HttpSession session) {
+    public String modificarPerfil(@ModelAttribute ModificaData modificaData,Model model, HttpSession session) {
         //Para comprobar si el usuario si existe y si esta logeado (Evitar error null)
         Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
 
@@ -98,7 +98,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/modificarPerfil")
-    public String registroSubmit(@Valid ModificaData modificaData, BindingResult result, Model model,
+    public String modificarPerfil(@Valid ModificaData modificaData, BindingResult result, Model model,
                                  HttpSession session) {
 
         Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
