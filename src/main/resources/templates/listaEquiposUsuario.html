@@ -10,12 +10,22 @@
         <div class="px-5 pb-3" th:if="${equipos.size() > 0}" th:each="equipo: ${equipos}">
             <div class="text-muted pb-3">
                 <i class="fas fa-mug-hot float-left mr-3 pt-1"></i>
-                <h4 th:text="${equipo.getNombre()}"></h4>
+                <h4><a class="btn text-muted" th:href="@{/equipos/{id}(id=${equipo.getId()})}" th:text="${equipo.getNombre()}"></a></h4>
                 <sub class="font-italic text-black-50 py-2" th:text="${equipo.getDescripcion()}"></sub>
             </div>
-            <div th:replace="fragments :: tablaEquipoConTareas (equipo=${equipo})"></div>
+            <div th:replace="fragments :: tablaEquipoConTareas (equipo=${equipo}, usuario=${usuario})"></div>
             <div th:unless="${equipo.getTareas().size() > 0}" class="alert alert-info" role="alert">
                 No hay tareas.
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${!#strings.isEmpty(mensaje)}">
+                    <span th:text="${mensaje}"></span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

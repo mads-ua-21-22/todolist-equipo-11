@@ -199,5 +199,21 @@ public class TareaController {
         else
             return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
     }
+
+    @PostMapping("/tareas/{id}/cambiarUsuario")
+    public String cambiarUsuarioTarea(@PathVariable(value="id") Long idTarea, HttpSession session, RedirectAttributes flash) {
+        Tarea tarea = tareaService.findById(idTarea);
+        Long idUsuario = managerUserSession.usuarioLogeado(session);
+
+        boolean resultado = tareaService.cambiarUsuarioTarea(idTarea, idUsuario);
+
+        if(resultado) {
+            flash.addFlashAttribute("mensaje","Añadida  tarea a TUS TAREAS");
+        } else {
+            flash.addFlashAttribute("mensaje","Algo salio mal al añadirte la TAREA");
+        }
+
+        return "redirect:/usuarios/" + idUsuario + "/equipos";
+    }
 }
 

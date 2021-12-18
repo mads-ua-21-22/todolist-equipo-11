@@ -51,6 +51,7 @@
     <!-- Lanzamos una petición DELETE por JavaScript para borrar una tarea -->
     <script type="text/javascript">
         function del(urlBorrar) {
+            console.log(urlBorrar);
             if (confirm('¿Estás seguro/a de que quieres borrar el equipo?')) {
                 fetch(urlBorrar, {
                     method: 'DELETE'

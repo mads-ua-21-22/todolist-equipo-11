@@ -163,7 +163,7 @@
     <p class="float-right alert alert-info">Total: <b th:text="${tareas.size()}"></b></p>
 </div>
 
-<div class="px-2" th:fragment="tablaEquipoConTareas (equipo)">
+<div class="px-2" th:fragment="tablaEquipoConTareas (equipo, usuario)">
     <table class="table" th:if="${equipo.getTareas().size() > 0}">
         <caption style="caption-side: top;">Tareas</caption>
         <thead>
@@ -176,15 +176,25 @@
         </thead>
         <tbody>
         <tr th:each="tarea: ${equipo.getTareas()}">
-            <td th:text="${tarea.getId()}"></td>
+            <td>
+                <b th:text="${tarea.getId()}"></b>
+                <a class="btn btn-sm" th:href="@{/tareas/{id}(id=${tarea.getId()})}"/>
+                <i class="fas fa-info-circle"></i>
+                </a>
+            </td>
             <td th:text="${tarea.getTitulo()}"></td>
             <td>
                 <p class="text-success" th:if="${tarea.isComplete()}">¡Tarea realizada!</p>
                 <p class="text-danger" th:if="${!tarea.isComplete()}">Aún por realizar...</p>
             </td>
             <td class="inline-block d-flex">
-                <i class="fas fa-user mr-2 mt-1"></i>
-                <p th:text="${tarea.getUsuario().getNombre()}"></p>
+                <div th:unless="${tarea.getUsuario() == tarea.getEquipo().getLider()}">
+                    <i class="fas fa-user mr-2 mt-1"></i>
+                    <b th:text="${tarea.getUsuario().getNombre()}"></b>
+                </div>
+                <form th:action="@{/tareas/{id}/cambiarUsuario(id=${tarea.getId()})}" th:if="${tarea.getUsuario() == tarea.getEquipo().getLider() && tarea.getUsuario() != usuario}" method="post" >
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-2 mt-1"></i></button>
+                </form>
             </td>
         </tr>
         </tbody>

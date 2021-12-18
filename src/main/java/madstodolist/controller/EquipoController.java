@@ -167,7 +167,7 @@ public class EquipoController {
             throw new UsuarioNoAdminException();
 
         equipoService.borrarEquipo(idEquipo);
-        return "";
+        return "redirect:/equipos";
     }
 
     @GetMapping("/equipos/{id}/editar")
