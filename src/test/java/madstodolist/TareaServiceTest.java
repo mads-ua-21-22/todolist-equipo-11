@@ -1,8 +1,10 @@
 package madstodolist;
 
 
+import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
+import madstodolist.service.EquipoService;
 import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
 public class TareaServiceTest {
@@ -24,6 +27,8 @@ public class TareaServiceTest {
     @Autowired
     TareaService tareaService;
 
+    @Autowired
+    EquipoService equipoService;
 
     @Test
     @Transactional
@@ -144,5 +149,50 @@ public class TareaServiceTest {
         tareaService.completaTarea(tarea);
 
         assertThat(tarea.isComplete()).isTrue();
+    }
+
+    @Test
+    @Transactional
+    public void cambiarUsuarioTareaEquipoTest() {
+        Tarea tarea = tareaService.findById(1L);
+        Equipo equipo = equipoService.findById(1L);
+        tarea.setEquipo(equipo);
+
+        Usuario usuario = new Usuario("ejemplo@ua");
+        usuario.setPassword("123");
+        usuarioService.registrar(usuario);
+
+        equipoService.agregarAEquipo(usuario.getId(), equipo.getId());
+        assertThat(tarea.getUsuario()).isNotEqualTo(usuario);
+        boolean resultado = tareaService.cambiarUsuarioTarea(tarea.getId(), usuario.getId());
+
+        assertThat(resultado).isEqualTo(true);
+        assertThat(tarea.getUsuario()).isEqualTo(usuario);
+    }
+
+    @Test
+    @Transactional
+    public void cambiarUsuarioTareaEquipoYaNoSePuedeTest() {
+        // inicializamos datos
+        Tarea tarea = tareaService.findById(1L);
+        Equipo equipo = equipoService.findById(1L);
+        tarea.setEquipo(equipo);
+        Usuario userTarea = usuarioService.findById(2L);
+
+        // cambiamos usuario a tarea
+        boolean resultado = tareaService.cambiarUsuarioTarea(tarea.getId(), userTarea.getId());
+        assertThat(resultado).isEqualTo(true);
+
+        // intetamos cambiar usuario cuando ya no se puede
+        Usuario usuario = new Usuario("ejemplo@ua");
+        usuario.setPassword("123");
+        usuarioService.registrar(usuario);
+
+        equipoService.agregarAEquipo(usuario.getId(), equipo.getId());
+        assertThat(tarea.getUsuario()).isNotEqualTo(usuario);
+        resultado = tareaService.cambiarUsuarioTarea(tarea.getId(), usuario.getId());
+
+        // cmprobamos resultados
+        assertThat(resultado).isEqualTo(false);
     }
 }

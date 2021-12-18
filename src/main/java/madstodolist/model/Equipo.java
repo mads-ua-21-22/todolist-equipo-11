@@ -27,8 +27,8 @@ public class Equipo implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "equipo_usuario",
-            joinColumns = @JoinColumn(name = "fk_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "fk_equipo"))
+            joinColumns = @JoinColumn(name = "fk_equipo"),
+            inverseJoinColumns = @JoinColumn(name = "fk_usuario"))
     Set<Usuario> usuarios = new HashSet<>();
 
     @Column(columnDefinition = "varchar(255) default ''")

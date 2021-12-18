@@ -1,5 +1,7 @@
 package madstodolist.service;
 
+import madstodolist.controller.exception.TareaNotFoundException;
+import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,5 +217,27 @@ public class TareaService {
     @Transactional
     public void completaTarea(Tarea tarea) {
         tarea.setComplete();
+    }
+
+    @Transactional
+    public boolean cambiarUsuarioTarea(Long idTarea, Long idUsuario){
+        Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+
+        // Comprobar si la tarea y el usuario existen
+        if(tarea == null) {
+            throw new TareaNotFoundException();
+        } else if(usuario == null){
+            throw new UsuarioNotFoundException();
+        } else {
+            // Comprobar que son del mismo equipo y el usuario es el lider
+            if(usuario.getEquipos().contains(tarea.getEquipo()) &&
+            tarea.getUsuario() == tarea.getEquipo().getLider()){
+                tarea.setUsuario(usuario);
+                return true;
+            }
+        }
+        // algo ha fallado y no se ha podido cambiar
+        return false;
     }
 }
