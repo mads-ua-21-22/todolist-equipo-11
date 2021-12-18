@@ -1,8 +1,10 @@
 package madstodolist;
 
 
+import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
+import madstodolist.service.EquipoService;
 import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,6 +23,9 @@ public class TareaServiceTest {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    EquipoService equipoService;
 
     @Autowired
     TareaService tareaService;
@@ -38,6 +44,34 @@ public class TareaServiceTest {
 
         Usuario usuario = usuarioService.findByEmail("user@ua");
         assertThat(usuario.getTareas()).contains(tarea);
+    }
+
+    @Test
+    @Transactional
+    public void testNuevaTareaUsuarioDescripcion() {
+        Tarea tarea = tareaService.nuevaTareaUsuario(1L,"Tare Descripcion","Test tarea descripcion");
+
+        Usuario usuario = usuarioService.findById(1L);
+
+        assertThat(usuario.getTareas()).contains(tarea);
+        assertThat(tarea.getDescripcion()).isEqualTo("Test tarea descripcion");
+
+    }
+
+    @Test
+    @Transactional
+    public void testNuevaTareaUsuarioFecha() {
+        Tarea tarea = tareaService.nuevaTareaUsuario(1L,"Practica 5 MADS","Test Practica 5", new Date());
+
+        Usuario usuario = usuarioService.findByEmail("user@ua");
+
+        assertThat(usuario.getTareas()).contains(tarea);
+    }
+
+    @Test
+    @Transactional
+    public void testNuevaTareaEquipo() {
+
     }
 
     @Test
