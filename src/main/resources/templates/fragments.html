@@ -82,16 +82,18 @@
             <td th:text="${tarea.id}"></td>
             <td th:text="${tarea.titulo}"></td>
             <td>
-                <a class="btn btn-primary btn-xs" th:href="@{{equipo}/tareas/{id}(equipo=${equipo.id},id=${tarea.id})}"/>
-                <i class="fas fa-info-circle"></i>
-                </a>
-                <a th:if="${equipo.lider == usuario}" class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
-                <i th:if="${equipo.lider == usuario}" class="fas fa-pen"></i>
-                </a>
-                <button th:if="${equipo.lider == usuario}" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
-                        th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-xs" th:href="@{/equipos/{equipo}/tareas/{id}(equipo=${equipo.id},id=${tarea.id})}"/>
+                    <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a th:if="${equipo.lider == usuario}" class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
+                    <i th:if="${equipo.lider == usuario}" class="fas fa-pen"></i>
+                    </a>
+                    <button th:if="${equipo.lider == usuario}" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                            th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </td>
             <td>
                 <div th:if="${!tarea.isComplete()}">
@@ -132,16 +134,18 @@
             <td th:text="${tarea.id}"></td>
             <td th:text="${tarea.titulo}"></td>
             <td>
-                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}(id=${tarea.id})}"/>
-                <i class="fas fa-info-circle"></i>
-                </a>
-                <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
-                <i class="fas fa-pen"></i>
-                </a>
-                <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
-                        th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}(id=${tarea.id})}"/>
+                    <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a class="btn btn-primary btn-xs" th:href="@{/tareas/{id}/editar(id=${tarea.id})}"/>
+                    <i class="fas fa-pen"></i>
+                    </a>
+                    <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                            th:onclick="'del(\'/tareas/' + ${tarea.id} + '\')'">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </td>
             <td>
                 <div th:if="${!tarea.isComplete()}">
@@ -180,7 +184,7 @@
         <tr th:each="tarea: ${equipo.getTareas()}">
             <td>
                 <b th:text="${tarea.getId()}"></b>
-                <a class="btn btn-sm" th:href="@{/tareas/{id}(id=${tarea.getId()})}"/>
+                <a class="btn btn-sm" th:href="@{/equipos/{equipo}/tareas/{id}(equipo=${equipo.getId()},id=${tarea.getId()})}"/>
                 <i class="fas fa-info-circle"></i>
                 </a>
             </td>

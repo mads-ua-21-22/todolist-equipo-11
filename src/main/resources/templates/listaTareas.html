@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: head (titulo='Login')"></head>
+<head th:replace="fragments :: head (titulo='Tareas')"></head>
 
     <body>
     <header th:replace="fragments:: header (esAdmin=${usuario.getAdministrador()} ,username=${usuario.nombre}, userid=${usuario.id})"> </header>
@@ -9,14 +9,14 @@
     <div class="container-fluid">
         <div class="row p-3">
             <div class="col">
-                <h2 class="d-inline" th:text="'Listado de tareas de ' + ${usuario.nombre}"></h2>
+                <h2 class="d-inline" th:text="'Tareas de ' + ${usuario.nombre}"></h2>
                 <a class="btn btn-primary float-right d-inline" th:href="@{/usuarios/{id}/tareas/nueva(id=${usuario.id})}">
                     <i class="fas fa-plus"></i>
                 </a>
             </div>
             <div class="container-fluid mt-4">
-                <meter id="progreso" class="progress progress-bar d-inline" style="width: 200px;" th:unless="${tareasCompletadas.size() == 0}" th:value="${porcentajeCompletadas}"></meter>
-                <label class="ml-3 text-danger d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.3 && porcentajeCompletadas != 0}">Quedan muchas por hacer...</label>
+                <meter id="progreso" class="progress progress-bar d-inline" style="width: 200px;" th:value="${porcentajeCompletadas}"></meter>
+                <label class="ml-3 text-danger d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.3}">Quedan muchas por hacer...</label>
                 <label class="text-warning ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.7 && porcentajeCompletadas >= 0.3}">¡Vas en buen camino!</label>
                 <label class="text-info ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas >= 0.7 && porcentajeCompletadas < 0.99}">¡Casi lo tienes!</label>
                 <label class="text-success ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas == 1}">¡Todas hechas!</label>

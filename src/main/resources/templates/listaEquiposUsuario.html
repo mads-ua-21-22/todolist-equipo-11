@@ -9,8 +9,7 @@
         </h2>
         <div class="px-5 pb-3" th:if="${equipos.size() > 0}" th:each="equipo: ${equipos}">
             <div class="text-muted pb-3">
-                <i class="fas fa-mug-hot float-left mr-3 pt-1"></i>
-                <h4><a class="btn text-muted" th:href="@{/equipos/{id}(id=${equipo.getId()})}" th:text="${equipo.getNombre()}"></a></h4>
+                <h4><i class="fas fa-mug-hot float-left mr-3 pt-1"></i><a class="btn text-muted font-weight-bolder" th:href="@{/equipos/{id}(id=${equipo.getId()})}" th:text="${equipo.getNombre()}"></a></h4>
                 <sub class="font-italic text-black-50 py-2" th:text="${equipo.getDescripcion()}"></sub>
             </div>
             <div th:replace="fragments :: tablaEquipoConTareas (equipo=${equipo}, usuario=${usuario})"></div>
