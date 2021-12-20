@@ -1,89 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: head (titulo='Equipos')"></head>
+<head th:replace="fragments :: head (titulo=${equipo.getNombre()})"></head>
 
     <body>
     <header th:replace="fragments:: header (esAdmin=${usuario.getAdministrador()} ,username=${usuario.nombre}, userid=${usuario.id})"> </header>
 
-    <div class="container-fluid">
+    <div class="container-fluid p-4">
 
-        <div class="row mt-3">
-            <div class="col">
-                <h2 th:text="'Listado de usuarios que componen el equipo ' + ${equipo.getNombre()} "></h2>
-                <h4 th:if="${equipo.getLider()}" th:text="'El lider del equipo es: ' + ${equipo.getLider().getNombre()} "></h4>
-            </div>
+        <div class="d-flex">
+            <h2 class="my-2" th:text="${equipo.getNombre()}"></h2>
+            <form th:action="@{/equipos/{id}/agregar(id=${equipo.id})}" method="post">
+                <button class="btn btn-primary m-1 ml-auto" th:if="${aparezco == false}" ><i class="fas fa-person-booth"></i></button>
+            </form>
+            <button th:if="${aparezco == true}" class="btn btn-danger btn-xs m-1 ml-auto" onmouseover="" style="cursor: pointer;"
+                    th:onclick="'del(\'/equipos/' + ${equipo.id} + '\')'"><i class="fas fa-door-open"></i></button>
         </div>
-        <div class="subTitle mt-md-4">
-            <p>
-            <h5 th:text="${equipo.getDescripcion()}"></h5>
-            </p>
-        </div>
-        <div class="row mt-3">
-            <div class="col">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Usuarios</th>
-                        <th th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}" >Accion</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="usuar: ${usuarios}">
-                        <td th:text="${usuar.nombre}"></td>
-                        <td th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}">
-                            <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
-                                    th:onclick="'delu(\'/equipo/'+${equipo.id}+'/'+${usuar.id}+'\')'">Borrar miembro</button>
+        <h5 class="p-3 text-muted" th:text="${equipo.getDescripcion()}"></h5>
+        <div class="px-3">
+            <div>
+                <h3 class="my-2">Usuarios</h3>
+                <h5 class="my-3 mx-4 font-weight-bold" th:if="${equipo.getLider()}" th:text="'Líder: ' + ${equipo.getLider().getNombre()} "></h5>
+                <div class="col">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Usuarios</th>
+                            <th th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}" >Accion</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="usuar: ${usuarios}">
+                            <td th:text="${usuar.nombre}"></td>
+                            <td th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}">
+                                <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                                        th:onclick="'delu(\'/equipo/'+${equipo.id}+'/'+${usuar.id}+'\')'"><i class="fas fa-trash"></i></button>
 
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
 
-                    </tbody>
-                </table>
-                <form th:action="@{/equipos/{id}/agregar(id=${equipo.id})}" method="post">
-                    <button class="btn btn-primary" th:if="${aparezco == false}" >Agregarme</button>
-                </form>
-                <button th:if="${aparezco == true}" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
-                        th:onclick="'del(\'/equipos/' + ${equipo.id} + '\')'">Borrarme</button>
-
-            </div>
-        </div>
-
-    </div>
-
-    <div class="container-fluid" th:if="${aparezco}">
-        <div class="row p-3">
-            <div class="col">
-                <h2 class="d-inline" th:text="'Listado de tareas de ' + ${equipo.nombre}"></h2>
-                <a th:if="${equipo.getLider() == usuario}" class="btn btn-primary float-right d-inline" th:href="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}">
-                    <i class="fas fa-plus"></i>
-                </a>
-            </div>
-            <div class="container-fluid mt-4">
-                <meter id="progreso" class="progress progress-bar d-inline" style="width: 200px;" th:unless="${tareasCompletadas.size() == 0}" th:value="${porcentajeCompletadas}"></meter>
-                <label class="ml-3 text-danger d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.3 && porcentajeCompletadas != 0}">Quedan muchas por hacer...</label>
-                <label class="text-warning ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.7 && porcentajeCompletadas >= 0.3}">¡Vas en buen camino!</label>
-                <label class="text-info ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas >= 0.7 && porcentajeCompletadas < 0.99}">¡Casi lo tienes!</label>
-                <label class="text-success ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas == 1}">¡Todas hechas!</label>
-            </div>
-        </div>
-        <div class="row p-2" th:if="${aparezco}">
-            <div class="col">
-                <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo},usuario=${usuario},tareas=${tareasNoCompletadas}, titulo='Tareas no completadas')"></div>
-                <div th:if="${tareasNoCompletadas.size() == 0}" class="alert alert-info" role="alert">
-                    No tienes tareas por hacer. ¡Empieza ahora!
+                        </tbody>
+                    </table>
                 </div>
-                <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo}, usuario=${usuario}, tareas=${tareasCompletadas}, titulo='Tareas completadas')"></div>
             </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col">
-                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${!#strings.isEmpty(mensaje)}">
-                    <span th:text="${mensaje}"></span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="py-3">
+                <div class="d-flex">
+                    <h3 th:text="'Tareas'"></h3>
+                    <a th:if="${equipo.getLider() == usuario}" class="btn btn-primary ml-auto m-1" th:href="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="container-fluid mt-4">
+                    <meter id="progreso" class="progress progress-bar d-inline" style="width: 200px;" th:value="${porcentajeCompletadas}"></meter>
+                    <label class="ml-3 text-danger d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.3}">Quedan muchas por hacer...</label>
+                    <label class="text-warning ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas < 0.7 && porcentajeCompletadas >= 0.3}">¡Vas en buen camino!</label>
+                    <label class="text-info ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas >= 0.7 && porcentajeCompletadas < 0.99}">¡Casi lo tienes!</label>
+                    <label class="text-success ml-3 d-inline" style="font-size: 14px" for="progreso" th:if="${porcentajeCompletadas == 1}">¡Todas hechas!</label>
+                </div>
+            </div>
+            <div class="row p-2" th:if="${aparezco}">
+                <div class="col">
+                    <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo},usuario=${usuario},tareas=${tareasNoCompletadas}, titulo='Tareas no completadas')"></div>
+                    <div th:if="${tareasNoCompletadas.size() == 0}" class="alert alert-info" role="alert">
+                        No tienes tareas por hacer. ¡Empieza ahora!
+                    </div>
+                    <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo}, usuario=${usuario}, tareas=${tareasCompletadas}, titulo='Tareas completadas')"></div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${!#strings.isEmpty(mensaje)}">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
