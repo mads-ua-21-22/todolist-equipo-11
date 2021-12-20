@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: head (titulo='Descripción del usuario')"></head>
+<head th:replace="fragments :: head (titulo=${usuario.getNombre()})"></head>
 
 <body>
 <header th:replace="fragments:: header (esAdmin=${usuarioSesion.getAdministrador()} ,username=${usuarioSesion.nombre}, userid=${usuarioSesion.id})"> </header>

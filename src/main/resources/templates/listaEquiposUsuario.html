@@ -4,7 +4,7 @@
 <body>
 <header th:replace="fragments :: header (esAdmin=${usuario.getAdministrador()}, username=${usuario.getNombre()}, userid=${usuario.getId()})"></header>
 <div class="container-fluid">
-        <h2 class="titulo p-4 text-muted text-capitalize">
+        <h2 class="titulo p-4 text-capitalize">
             mis equipos
         </h2>
         <div class="px-5 pb-3" th:if="${equipos.size() > 0}" th:each="equipo: ${equipos}">
