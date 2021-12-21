@@ -32,6 +32,9 @@ Respecto al Pair Programming, lo hemos utilizado en algunas ocasiones ya que es 
 * Los equipos tienen un Lider
 * Podemos modificar nuestros datos de Usuario
 * Podemos comentar en las tareas
+* Los equipos tienen tareas
+* Podemos consultar toda la información de las tareas
+* Las tareas tienen una fecha límite de realización
 
 ### Equipos tienen un Lider
 
@@ -230,6 +233,21 @@ Tests de ejemplo:
         assertThat(tarea.getComentarios()).hasSize(2);
     }
 ```
+###Los equipos tienen tareas
+Esta funcionalidad trata de que los equipos peuden tener tareas asociadas.
+Es decir, ahora los equipos tienen tareas independientes a las del usuario y de esta forma todos los miembros
+del equipo podrán consultarlas, completarlas y si según si el usuario es líder o no podrá asígnarle las tareas a otro
+usuario, para que la compleete otro usuario, crear nuevas tareas, editarlas o eliminarlas.
+
+Para esta funcionalidad hemos añadido las siguientes vistas:
+
+* infotareaequipo
+* formNuevaTareaEquipo
+
+Y editamos vistas ya creadas anteriormente:
+ *infEquipo
+
+(Continuar)
 
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
