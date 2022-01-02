@@ -245,10 +245,42 @@ Para esta funcionalidad hemos añadido las siguientes vistas:
 * formNuevaTareaEquipo
 
 Y editamos vistas ya creadas anteriormente:
- *infEquipo
+* infoEquipo
 
-(Continuar)
+Se hacen diversas comprobaciones: si un usuario pertenecen a un equipo o si un usuario es líder del equipo, entre otras.
 
+Esta primera se hace para saber si podrá ver las tareas de un equipo, asi como para evitar su accesso a la tarea a través
+de la URL.
+
+```javascript
+if(!equipo.getUsuarios().contains(usuario))
+            throw new UsuarioNotFoundException();
+```
+También comprobamos que la tarea pertenece al equipo.
+```javascript
+if(!equipo.getTareas().contains(tarea))
+    throw new TareaNotFoundException();
+```
+Se le ha añadido a la vista de información del Equipo una vista de las diferentes tareas que pertenecen a dicho equipo.
+Esto se consigue con el siguiente HTML:
+```html
+<div class="col">
+    <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo},usuario=${usuario},tareas=${tareasNoCompletadas}, titulo='Tareas no completadas')"></div>
+    <div th:if="${tareasNoCompletadas.size() == 0}" class="alert alert-info" role="alert">
+        No tienes tareas por hacer. ¡Empieza ahora!
+    </div>
+    <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo}, usuario=${usuario}, tareas=${tareasCompletadas}, titulo='Tareas completadas')"></div>
+</div>
+```
+Además como se explica antes el Líder de un equipo tiene la capacidad de añadir, borrar y editar las tareas de un equipo.
+```html
+<th th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}" >Accion</th>
+```
+```html
+<a th:if="${equipo.getLider() == usuario}" class="btn btn-primary float-right d-inline" th:href="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}">
+    <i class="fas fa-plus"></i>
+</a>
+```
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
 
