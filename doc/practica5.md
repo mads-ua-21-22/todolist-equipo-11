@@ -281,6 +281,48 @@ Además como se explica antes el Líder de un equipo tiene la capacidad de añad
     <i class="fas fa-plus"></i>
 </a>
 ```
+## Podemos consultar toda la información de las tareas
+Las tareas tienen una pequeña descripción en la cual se pueden consultar la información de cada una de las tareas.
+
+Además de consultar la información se le ha añadido una pequeña descripción para que nos arroje más detalles sobre la
+realización de la tarea.
+```java
+@Entity
+@Table(name = "tareas")
+public class Tarea implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull
+    private String titulo;
+
+    ...
+    
+    private String descripcion;
+
+    ...
+
+    public String getDescripcion() { return  descripcion; }
+
+    public void setDescripcion(String descripcion){ this.descripcion = descripcion; }
+
+    ...
+}
+```
+
+Entonces al añadirle esta pequeña descripción se le ha añadido a la hora de crear una tarea la opción de completarla con
+descripción.
+
+Y a la hora de editar la información de la tarea también se va a poder modificar la descripción de esta.
+
+Pero lo importante es poder observar toda la información de dicha tarea por lo tanto se ha creado la vista de *infotarea*
+para poder consultar dicha información.
+## Las tareas tienen una fecha límite de realización
+
+
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
 
