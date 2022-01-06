@@ -32,6 +32,9 @@ Respecto al Pair Programming, lo hemos utilizado en algunas ocasiones ya que es 
 * Los equipos tienen un Lider
 * Podemos modificar nuestros datos de Usuario
 * Podemos comentar en las tareas
+* Los equipos tienen tareas
+* Podemos consultar toda la información de las tareas
+* Las tareas tienen una fecha límite de realización
 
 ### Equipos tienen un Lider
 
@@ -230,7 +233,142 @@ Tests de ejemplo:
         assertThat(tarea.getComentarios()).hasSize(2);
     }
 ```
+###Los equipos tienen tareas
+Esta funcionalidad trata de que los equipos peuden tener tareas asociadas.
+Es decir, ahora los equipos tienen tareas independientes a las del usuario y de esta forma todos los miembros
+del equipo podrán consultarlas, completarlas y si según si el usuario es líder o no podrá asígnarle las tareas a otro
+usuario, para que la compleete otro usuario, crear nuevas tareas, editarlas o eliminarlas.
 
+Para esta funcionalidad hemos añadido las siguientes vistas:
+
+* infotareaequipo
+* formNuevaTareaEquipo
+
+Y editamos vistas ya creadas anteriormente:
+* infoEquipo
+
+Se hacen diversas comprobaciones: si un usuario pertenecen a un equipo o si un usuario es líder del equipo, entre otras.
+
+Esta primera se hace para saber si podrá ver las tareas de un equipo, asi como para evitar su accesso a la tarea a través
+de la URL.
+
+```javascript
+if(!equipo.getUsuarios().contains(usuario))
+            throw new UsuarioNotFoundException();
+```
+También comprobamos que la tarea pertenece al equipo.
+```javascript
+if(!equipo.getTareas().contains(tarea))
+    throw new TareaNotFoundException();
+```
+Se le ha añadido a la vista de información del Equipo una vista de las diferentes tareas que pertenecen a dicho equipo.
+Esto se consigue con el siguiente HTML:
+```html
+<div class="col">
+    <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo},usuario=${usuario},tareas=${tareasNoCompletadas}, titulo='Tareas no completadas')"></div>
+    <div th:if="${tareasNoCompletadas.size() == 0}" class="alert alert-info" role="alert">
+        No tienes tareas por hacer. ¡Empieza ahora!
+    </div>
+    <div th:replace="fragments :: tablaEquipoTareas(equipo=${equipo}, usuario=${usuario}, tareas=${tareasCompletadas}, titulo='Tareas completadas')"></div>
+</div>
+```
+Además como se explica antes el Líder de un equipo tiene la capacidad de añadir, borrar y editar las tareas de un equipo.
+```html
+<th th:if="${usuario.getAdministrador()} or ${equipo.getLider() == usuario}" >Accion</th>
+```
+```html
+<a th:if="${equipo.getLider() == usuario}" class="btn btn-primary float-right d-inline" th:href="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}">
+    <i class="fas fa-plus"></i>
+</a>
+```
+## Podemos consultar toda la información de las tareas
+Las tareas tienen una pequeña descripción en la cual se pueden consultar la información de cada una de las tareas.
+
+Además de consultar la información se le ha añadido una pequeña descripción para que nos arroje más detalles sobre la
+realización de la tarea.
+```java
+@Entity
+@Table(name = "tareas")
+public class Tarea implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull
+    private String titulo;
+
+    ...
+    
+    private String descripcion;
+
+    ...
+
+    public String getDescripcion() { return  descripcion; }
+
+    public void setDescripcion(String descripcion){ this.descripcion = descripcion; }
+
+    ...
+}
+```
+
+Entonces al añadirle esta pequeña descripción se le ha añadido a la hora de crear una tarea la opción de completarla con
+descripción.
+
+Y a la hora de editar la información de la tarea también se va a poder modificar la descripción de esta.
+
+Pero lo importante es poder observar toda la información de dicha tarea por lo tanto se ha creado la vista de *infotarea*
+para poder consultar dicha información.
+## Las tareas tienen una fecha límite de realización
+Al crear una tarea se le puede añadir una fecha límite para la realización de la tarea que se está creando. De igual 
+al editar tarea también se puede editar la fecha límite de esta.
+```java
+@Entity
+@Table(name = "tareas")
+public class Tarea implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    ...
+
+    @Column(name = "fecha_limite")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaLimite;
+
+    ...
+
+    public Date getFechaLimite() { return  fechaLimite; }
+
+    public void setFechaLimite(Date fechaLimite) { this.fechaLimite = fechaLimite; }
+
+    public boolean retrasada() {
+        java.util.Date fecha = new Date();
+        if(fecha.compareTo(fechaLimite) == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean nofechaLimite() { return  fechaLimite == null; }
+
+    ...
+}
+```
+Esta fecha límite se mostrará también en la información de la tarea antes mencionada así mismo en la vista creada para 
+mostrar dicha información, *infotarea*.
+
+Pero para una mayor visualización del estado de la tarea respecto a la fecha limite hemos implementado en la vista en la 
+cual se muestran el listado de las tareas si dicha tarea esta todavía en curso o va retrasada respecto a la fecha actual.
+```html
+<div th:if="${!tarea.isComplete()}">
+    <div th:if="${!tarea.nofechaLimite()}">
+        <p class="text-danger" th:if="${tarea.retrasada()}">Retrasada!</p>
+        <p class="text-success" th:if="${!tarea.retrasada()}">En Curso</p>
+    </div>
+</div>
+```
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
 
