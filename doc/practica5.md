@@ -321,8 +321,54 @@ Y a la hora de editar la información de la tarea también se va a poder modific
 Pero lo importante es poder observar toda la información de dicha tarea por lo tanto se ha creado la vista de *infotarea*
 para poder consultar dicha información.
 ## Las tareas tienen una fecha límite de realización
+Al crear una tarea se le puede añadir una fecha límite para la realización de la tarea que se está creando. De igual 
+al editar tarea también se puede editar la fecha límite de esta.
+```java
+@Entity
+@Table(name = "tareas")
+public class Tarea implements Serializable {
 
+    private static final long serialVersionUID = 1L;
 
+    ...
+
+    @Column(name = "fecha_limite")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaLimite;
+
+    ...
+
+    public Date getFechaLimite() { return  fechaLimite; }
+
+    public void setFechaLimite(Date fechaLimite) { this.fechaLimite = fechaLimite; }
+
+    public boolean retrasada() {
+        java.util.Date fecha = new Date();
+        if(fecha.compareTo(fechaLimite) == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean nofechaLimite() { return  fechaLimite == null; }
+
+    ...
+}
+```
+Esta fecha límite se mostrará también en la información de la tarea antes mencionada así mismo en la vista creada para 
+mostrar dicha información, *infotarea*.
+
+Pero para una mayor visualización del estado de la tarea respecto a la fecha limite hemos implementado en la vista en la 
+cual se muestran el listado de las tareas si dicha tarea esta todavía en curso o va retrasada respecto a la fecha actual.
+```html
+<div th:if="${!tarea.isComplete()}">
+    <div th:if="${!tarea.nofechaLimite()}">
+        <p class="text-danger" th:if="${tarea.retrasada()}">Retrasada!</p>
+        <p class="text-success" th:if="${!tarea.retrasada()}">En Curso</p>
+    </div>
+</div>
+```
 ## *Detalles del despliegue de producción*
 El despliegue de producción se ha generado desde alu21.
 
