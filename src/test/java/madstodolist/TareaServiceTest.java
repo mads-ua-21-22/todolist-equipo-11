@@ -61,17 +61,29 @@ public class TareaServiceTest {
     @Test
     @Transactional
     public void testNuevaTareaUsuarioFecha() {
-        Tarea tarea = tareaService.nuevaTareaUsuario(1L,"Practica 5 MADS","Test Practica 5", new Date());
+        Date fecha = new Date();
+        Tarea tarea = tareaService.nuevaTareaUsuario(1L,"Practica 5 MADS","Test Practica 5", fecha);
 
         Usuario usuario = usuarioService.findByEmail("user@ua");
 
         assertThat(usuario.getTareas()).contains(tarea);
+        assertThat(tarea.getFechaLimite()).isEqualTo(fecha);
     }
 
     @Test
     @Transactional
     public void testNuevaTareaEquipo() {
+        Equipo equipo = equipoService.findById(1L);
 
+        assertThat(equipo).isNotNull();
+
+        Date fecha = new Date();
+        Tarea tare = tareaService.nuevaTareaEquipo(1L,1L,"Practica 5 MADS","Descripcion",fecha);
+
+        assertThat(tare.getEquipo()).isEqualTo(equipo);
+        assertThat(tare.getTitulo()).isEqualTo("Practica 5 MADS");
+        assertThat(tare.getDescripcion()).isEqualTo("Descripcion");
+        assertThat(tare.getFechaLimite()).isEqualTo(fecha);
     }
 
     @Test
