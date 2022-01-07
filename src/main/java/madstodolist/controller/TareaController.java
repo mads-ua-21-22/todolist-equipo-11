@@ -3,8 +3,11 @@ package madstodolist.controller;
 import madstodolist.authentication.ManagerUserSession;
 import madstodolist.controller.exception.TareaNotFoundException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
+import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
+import madstodolist.service.ComentarioService;
+import madstodolist.service.EquipoService;
 import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
@@ -24,6 +28,12 @@ public class TareaController {
 
     @Autowired
     TareaService tareaService;
+
+    @Autowired
+    EquipoService equipoService;
+
+    @Autowired
+    ComentarioService comentarioService;
 
     @Autowired
     ManagerUserSession managerUserSession;
@@ -55,7 +65,7 @@ public class TareaController {
         if (usuario == null) {
             throw new UsuarioNotFoundException();
         }
-        tareaService.nuevaTareaUsuario(idUsuario, tareaData.getTitulo());
+        tareaService.nuevaTareaUsuario(idUsuario, tareaData.getTitulo(),tareaData.getDescripcion(),tareaData.getFechaLimite());
         flash.addFlashAttribute("mensaje", "Tarea creada correctamente");
         return "redirect:/usuarios/" + idUsuario + "/tareas";
      }
@@ -69,10 +79,58 @@ public class TareaController {
         if (usuario == null) {
             throw new UsuarioNotFoundException();
         }
-        List<Tarea> tareas = tareaService.allTareasUsuario(idUsuario);
+        List<Tarea> tareasCompletadas = tareaService.allTareasCompletadasUsuario(idUsuario);
+        List<Tarea> tareasNoCompletadas = tareaService.allTareasNoCompletadasUsuario(idUsuario);
+
+        float porcentajeCompletadas = 0;
+
+        if(tareasCompletadas.size() > 0)
+            porcentajeCompletadas = (float) tareasCompletadas.size() / (tareasCompletadas.size() + tareasNoCompletadas.size());
+
         model.addAttribute("usuario", usuario);
-        model.addAttribute("tareas", tareas);
+        model.addAttribute("tareasCompletadas", tareasCompletadas);
+        model.addAttribute("tareasNoCompletadas", tareasNoCompletadas);
+        model.addAttribute("porcentajeCompletadas", porcentajeCompletadas);
+        session.setAttribute("tareaequipo",false);
         return "listaTareas";
+    }
+
+    @GetMapping("/tareas/{id}")
+    public String formTarea(@PathVariable(value = "id") Long idTarea, @ModelAttribute TareaData tareaData,
+                            Model model, HttpSession session) {
+        Tarea tarea = tareaService.findById(idTarea);
+        if (tarea == null)
+            throw new TareaNotFoundException();
+
+        managerUserSession.comprobarUsuarioLogeado(session,tarea.getUsuario().getId());
+        model.addAttribute("tarea",tarea);
+        tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        model.addAttribute("comentarios", comentarioService.allComentariosTarea(tarea.getId()));
+        return "infotarea";
+    }
+
+    @GetMapping("/equipos/{equipo}/tareas/{id}")
+    public String formTareaEquipo(@PathVariable(value = "equipo") Long idEquipo,@PathVariable(value = "id") Long idTarea, @ModelAttribute TareaData tareaData,
+                            Model model, HttpSession session) {
+        Tarea tarea = tareaService.findById(idTarea);
+        if (tarea == null)
+            throw new TareaNotFoundException();
+
+        Usuario usuario = usuarioService.findById(managerUserSession.usuarioLogeado(session));
+        Equipo equipo = equipoService.findById(idEquipo);
+
+        if(!equipo.getUsuarios().contains(usuario))
+            throw new UsuarioNotFoundException();
+        if(!equipo.getTareas().contains(tarea))
+            throw new TareaNotFoundException();
+        model.addAttribute("equipo",equipo);
+        model.addAttribute("usuario",usuario);
+        model.addAttribute("tarea",tarea);
+        model.addAttribute("comentarios",comentarioService.allComentariosTarea(tarea.getId()));
+        tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        return "infotareaequipo";
     }
 
     @GetMapping("/tareas/{id}/editar")
@@ -83,11 +141,12 @@ public class TareaController {
         if (tarea == null) {
             throw new TareaNotFoundException();
         }
-
         managerUserSession.comprobarUsuarioLogeado(session, tarea.getUsuario().getId());
 
         model.addAttribute("tarea", tarea);
         tareaData.setTitulo(tarea.getTitulo());
+        tareaData.setDescripcion(tarea.getDescripcion());
+        tareaData.setFechaLimite(tarea.getFechaLimite());
         return "formEditarTarea";
     }
 
@@ -103,9 +162,12 @@ public class TareaController {
 
         managerUserSession.comprobarUsuarioLogeado(session, idUsuario);
 
-        tareaService.modificaTarea(idTarea, tareaData.getTitulo());
+        tareaService.modificaTarea(idTarea, tareaData.getTitulo(),tareaData.getDescripcion(),tareaData.getFechaLimite());
         flash.addFlashAttribute("mensaje", "Tarea modificada correctamente");
-        return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
+        if((Boolean) session.getAttribute("tareaequipo"))
+            return "redirect:/equipos/" + tarea.getEquipo().getId();
+        else
+            return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
     }
 
     @DeleteMapping("/tareas/{id}")
@@ -122,6 +184,36 @@ public class TareaController {
 
         tareaService.borraTarea(idTarea);
         return "";
+    }
+
+    @PostMapping("/tareas/{id}/completada")
+    public String completarTarea(@PathVariable(value="id") Long idTarea, HttpSession session) {
+        // Obtener tarea
+        Tarea tarea = tareaService.findById(idTarea);
+        // Usuario de la tarea
+        Usuario usuario = tarea.getUsuario();
+        // Cambiar estado de la tarea
+        tareaService.completaTarea(tarea);
+        if((Boolean) session.getAttribute("tareaequipo"))
+            return "redirect:/equipos/" + tarea.getEquipo().getId();
+        else
+            return "redirect:/usuarios/" + tarea.getUsuario().getId() + "/tareas";
+    }
+
+    @PostMapping("/tareas/{id}/cambiarUsuario")
+    public String cambiarUsuarioTarea(@PathVariable(value="id") Long idTarea, HttpSession session, RedirectAttributes flash) {
+        Tarea tarea = tareaService.findById(idTarea);
+        Long idUsuario = managerUserSession.usuarioLogeado(session);
+
+        boolean resultado = tareaService.cambiarUsuarioTarea(idTarea, idUsuario);
+
+        if(resultado) {
+            flash.addFlashAttribute("mensaje","Añadida  tarea a TUS TAREAS");
+        } else {
+            flash.addFlashAttribute("mensaje","Algo salio mal al añadirte la TAREA");
+        }
+
+        return "redirect:/usuarios/" + idUsuario + "/equipos";
     }
 }
 

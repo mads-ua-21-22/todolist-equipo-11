@@ -5,21 +5,21 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.Email;
 import java.util.Date;
 
-public class RegistroData {
-    @Email
-    private String eMail;
+public class ModificaData {
+    private String actualpassword;
     private String password;
+    private String password2;
     private String nombre;
-    private Boolean administrador = false;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
 
-    public String geteMail() {
-        return eMail;
+
+    public String getActualpassword() {
+        return actualpassword;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setActualpassword(String actualpassword) {
+        this.actualpassword = actualpassword;
     }
 
     public String getPassword() {
@@ -28,6 +28,14 @@ public class RegistroData {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 
     public String getNombre() {
@@ -46,11 +54,4 @@ public class RegistroData {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Boolean getAdministrador() {
-        return administrador;
-    }
-
-    public void setAdministrador(Boolean administrador) {
-        this.administrador = administrador;
-    }
 }

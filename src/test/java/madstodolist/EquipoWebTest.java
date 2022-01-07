@@ -2,8 +2,10 @@ package madstodolist;
 
 import madstodolist.authentication.ManagerUserSession;
 import madstodolist.model.Equipo;
+import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.service.EquipoService;
+import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import madstodolist.service.UsuarioServiceException;
 import org.junit.jupiter.api.Assertions;
@@ -36,6 +38,8 @@ public class EquipoWebTest {
     @MockBean
     private UsuarioService usuarioService;
     @MockBean
+    private TareaService tareaService;
+    @MockBean
     private EquipoService equipoService;
     // Al mocker el manegerUserSession, no lanza la excepción cuando
     // se intenta comprobar si un usuario está logeado
@@ -51,7 +55,7 @@ public class EquipoWebTest {
         when(usuarioService.findById(null)).thenReturn(usuario);
 
         this.mockMvc.perform(get("/equipos"))
-                .andExpect(content().string(containsString("Listado de equipos")));
+                .andExpect(content().string(containsString("Equipos")));
     }
 
     @Test
@@ -82,21 +86,10 @@ public class EquipoWebTest {
         when(equipoService.findAllOrderedByName()).thenReturn(equipos);
 
         this.mockMvc.perform(get("/equipos/1"))
-                .andExpect(content().string(containsString("Listado de usuarios que componen el equipo")))
+                .andExpect(content().string(containsString(equipo.getNombre())))
                 .andExpect(content().string(containsString(descripcion)));
     }
 
-    @Test
-    public void apareceBotonEnEquipos() throws Exception {
-        Usuario usuario = new Usuario("domingo@ua.es");
-        usuario.setId(1L);
-        usuario.setAdministrador(true);
-
-        when(usuarioService.findById(null)).thenReturn(usuario);
-
-        this.mockMvc.perform(get("/equipos"))
-                .andExpect(content().string(containsString("Crear equipo")));
-    }
     @Test
     public void vistaCrearEquipo() throws Exception {
         Usuario usuario = new Usuario("domingo@ua.es");
@@ -121,7 +114,7 @@ public class EquipoWebTest {
         this.mockMvc.perform(post("/equipos/1/agregar"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/equipos"));
+                .andExpect(redirectedUrl("/equipos/1"));
     }
 
     @Test
@@ -167,4 +160,16 @@ public class EquipoWebTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/equipos"));
     }
+
+    @Test
+    public void vistaInfoTareaEquipoBloqueada() throws Exception {
+        this.mockMvc.perform(get("/equipos/1/tareas/1"))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void agregarTareaAEquipoBloqueado() throws Exception {
+        this.mockMvc.perform(get("/equipos/1/tareas/nueva"))
+                .andExpect(status().isNotFound());
+    }
+
 }

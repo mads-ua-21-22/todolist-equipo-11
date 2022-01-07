@@ -5,8 +5,10 @@ import madstodolist.authentication.ManagerUserSession;
 import madstodolist.authentication.UsuarioNoAdminException;
 import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.model.Equipo;
+import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
 import madstodolist.service.EquipoService;
+import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,8 @@ public class EquipoController {
     EquipoService equipoService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    TareaService tareaService;
     @Autowired
     ManagerUserSession managerUserSession;
 
@@ -55,6 +59,13 @@ public class EquipoController {
         Equipo equipo = equipoService.findById(idEquipo);
 
         List<Usuario> usuarios = equipoService.usuariosEquipo(idEquipo);
+        List<Tarea> tareasCompletadas = tareaService.allTareasCompletadasEquipo(idEquipo);
+        List<Tarea> tareasNoCompletadas = tareaService.allTareasNoCompletadasEquipo(idEquipo);
+
+        float porcentajeCompletadas = 0;
+
+        if(tareasCompletadas.size()>0)
+            porcentajeCompletadas = (float) tareasCompletadas.size() / (tareasCompletadas.size() + tareasNoCompletadas.size());
 
         boolean aparezco = false;
         if(equipo.getUsuarios().contains(usuario))
@@ -64,6 +75,11 @@ public class EquipoController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("equipo", equipo);
+        session.setAttribute("tareaequipo",true);
+        model.addAttribute("tareasCompletadas", tareasCompletadas);
+        model.addAttribute("tareasNoCompletadas", tareasNoCompletadas);
+        model.addAttribute("porcentajeCompletadas", porcentajeCompletadas);
+
         return "infoequipo";
     }
 
@@ -115,7 +131,7 @@ public class EquipoController {
         equipoService.agregarAEquipo(idUsuario,idEquipo);
 
         flash.addFlashAttribute("mensaje", "Agregado al equipo correctamente");
-        return "redirect:/equipos";
+        return "redirect:/equipos/" + idEquipo;
     }
 
     @DeleteMapping("/equipos/{id}")
@@ -151,7 +167,7 @@ public class EquipoController {
             throw new UsuarioNoAdminException();
 
         equipoService.borrarEquipo(idEquipo);
-        return "";
+        return "redirect:/equipos";
     }
 
     @GetMapping("/equipos/{id}/editar")
@@ -205,13 +221,50 @@ public class EquipoController {
                                      HttpSession session){
         Long idlogin = (Long) session.getAttribute("idUsuarioLogeado");
         managerUserSession.comprobarUsuarioLogeado(session,idlogin);
+        Equipo equipo = equipoService.findById(idEquipo);
 
         Usuario usuario = usuarioService.findById(idlogin);
         if(usuario == null)
             throw new UsuarioNotFoundException();
-        if(!usuario.getAdministrador())
+        if(equipo.getLider() != usuario && !usuario.getAdministrador())
             throw new UsuarioNoAdminException();
         equipoService.eliminarDeEquipo(idUsuario,idEquipo);
         return "";
+    }
+
+    @GetMapping("/equipos/{id}/tareas/nueva")
+    public String formNuevaTarea(@PathVariable(value = "id") Long idEquipo,
+                                 @ModelAttribute TareaData tareaData,Model model,
+                                 HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if(usuario == null)
+            throw new UsuarioNotFoundException();
+        Equipo equipo = equipoService.findById(idEquipo);
+        if(equipo.getLider() != usuario)
+            throw new UsuarioNotFoundException();
+
+        model.addAttribute("usuario",usuario);
+        model.addAttribute("equipo",equipo);
+        return "formNuevaTareaEquipo";
+    }
+
+    @PostMapping("/equipos/{id}/tareas/nueva")
+    public String nuevaTarea(@PathVariable(value = "id") Long idEquipo, @ModelAttribute TareaData tareaData,
+                             Model model, RedirectAttributes flash,
+                             HttpSession session) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogeado");
+        managerUserSession.comprobarUsuarioLogeado(session,idUsuario);
+
+        Usuario usuario = usuarioService.findById(idUsuario);
+        if (usuario == null)
+            throw new UsuarioNotFoundException();
+        //Se le asigna la tarea directamente al usuario que la crea he tenido que hacer esto porque me da un
+        //error inexplicable en la DB
+        tareaService.nuevaTareaEquipo(idEquipo,idUsuario,tareaData.getTitulo(),tareaData.getDescripcion(),tareaData.getFechaLimite());
+        flash.addFlashAttribute("mensaje","Tarea creada correctamente");
+        return "redirect:/equipos/" + idEquipo;
     }
 }

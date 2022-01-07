@@ -20,22 +20,33 @@ public class Equipo implements Serializable {
     @NotNull
     private String nombre;
 
+    //Relacion Equipo Tareas
+    @OneToMany(mappedBy =  "equipo",fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    Set<Tarea> tareas = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "equipo_usuario",
-            joinColumns = @JoinColumn(name = "fk_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "fk_equipo"))
+            joinColumns = { @JoinColumn(name = "fk_equipo") },
+            inverseJoinColumns = { @JoinColumn(name = "fk_usuario") })
     Set<Usuario> usuarios = new HashSet<>();
 
     @Column(columnDefinition = "varchar(255) default ''")
     private String descripcion;
+
+    //Relacion muchos-a-uno entre equipos y usuario
+    @ManyToOne
+    //Nombre de la columna en la BD que guarda fisicamente
+    //el ID del lider con el que está asociado el equipo
+    @JoinColumn(name = "lider")
+    private Usuario lider;
 
     // Constructor público con los atributos obligatorios. En este caso el correo electrónico.
     public Equipo(String nombre) {
         this.nombre = nombre;
     }
 
-    public Equipo() {
+    private Equipo() {
     }
 
     public String getNombre() {
@@ -69,6 +80,14 @@ public class Equipo implements Serializable {
     public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
+
+    public void setTareas(Set<Tarea> tareas){this.tareas = tareas;}
+
+    public Set<Tarea> getTareas(){return tareas;}
+
+    public Usuario getLider() { return  lider; }
+
+    public void setLider(Usuario lider) { this.lider = lider; }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

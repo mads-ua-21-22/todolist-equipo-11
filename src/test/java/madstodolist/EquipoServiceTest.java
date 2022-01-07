@@ -77,7 +77,7 @@ public class EquipoServiceTest {
         List<Usuario> usuarios = equipoService.usuariosEquipo(1L);
 
         // THEN
-        assertThat(usuarios).hasSize(1);
+        assertThat(usuarios).hasSize(2);
         assertThat(usuarios.get(0).getEmail()).isEqualTo("user@ua");
         // Comprobamos que la relación entre usuarios y equipos es eager
         // Primero comprobamos que la colección de equipos tiene 1 elemento
@@ -116,6 +116,7 @@ public class EquipoServiceTest {
     @Test
     @Transactional
     public void deleteUsuarioEquipo() {
+        equipoService.agregarAEquipo(1L, 1L);
         Usuario usuario = usuarioService.findById(1L);
         assertThat(usuario.getEquipos()).hasSize(1);
         equipoService.eliminarDeEquipo(1L, 1L);

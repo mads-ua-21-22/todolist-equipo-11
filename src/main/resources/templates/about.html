@@ -4,20 +4,23 @@
 <head th:replace="fragments :: head (titulo='Acerca de')"></head>
 
 <body>
-<div class="container-fluid">
     <div class="container-fluid">
-        <h1>ToDoList</h1>
-        <ul>
-            <li>Desarrollada por Pascual Juan Sánchez</li>
-            <li>Desarrollada por Darío Guerrero Montero </li>
-            <li>Desarrollada por Ignacio Ortega Carrillo</li>
-            <li>Versión 1.3.0</li>
-            <li>Fecha de release: 22-11-21</li>
-        </ul>
+        <div class="d-flex justify-content-center py-4">
+            <div class="card shadow">
+                <h1 class="card-header text-center">ToDoList</h1>
+                <div class="card-body text-muted">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Desarrollada por <b class="font-weight-bolder">Pascual Juan Sánchez</b></li>
+                        <li class="list-group-item">Desarrollada por <b class="font-weight-bolder">Darío Guerrero Montero</b></li>
+                        <li class="list-group-item">Desarrollada por <b class="font-weight-bolder">Ignacio Ortega Carrillo</b></li>
+                        <li class="list-group-item">Versión <b class="font-weight-bolder">1.4.0</b></li>
+                        <li class="list-group-item">Fecha de release: <b class="font-weight-bolder">pendiente</b></li>
+                    </ul>
+                    <button th:onclick="volver()" class="btn text-primary text-center d-block w-100">Volver</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-</div>
-
 <div th:replace="fragments::javascript"/>
 
 </body>

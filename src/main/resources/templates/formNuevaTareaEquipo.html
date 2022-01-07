@@ -8,20 +8,20 @@
 
 <div class="container-fluid">
 
-    <h2 class="p-3" th:text="'Nueva tarea para el usuario ' + ${usuario.getNombre()}"></h2>
+    <h2 class="p-3" th:text="'Nueva tarea para el Equipo ' + ${equipo.getId()}"></h2>
 
-    <form method="post" th:action="@{/usuarios/{id}/tareas/nueva(id=${usuario.id})}" th:object="${tareaData}">
+    <form method="post" th:action="@{/equipos/{id}/tareas/nueva(id=${equipo.id})}" th:object="${tareaData}">
         <div class="col-6">
         <div class="form-group">
             <label for="titulo">Título de la tarea:</label>
             <input class="form-control" id="titulo" name="titulo" required th:field="*{titulo}" type="text"/>
             <label for="fechaLimite">Fecha</label>
-            <input id="fechaLimite" class="form-control" name="fechaLimite" th:placeholder="01-12-2019" th:field="*{fechaLimite}" type="date" />
+            <input id="fechaLimite" class="form-control" name="fechaLimite" th:placeholder="01-12-2019" th:field="*{fechaLimite}" type="date"/>
             <label for="descripcion">Descripción de la tarea:</label>
-            <textarea class="form-control" id="descripcion" th:field="*{descripcion}" name="descripcion"></textarea>
+            <textarea class="form-control" id="descripcion" th:field="*{descripcion}"></textarea>
         </div>
         <button class="btn btn-primary" type="submit">Crear tarea</button>
-        <a class="btn btn-link" th:href="@{/usuarios/{id}/tareas(id=${usuario.id})}">Cancelar</a>
+        <a class="btn btn-link" th:href="@{/equipos/{id}(id=${equipo.id})}">Cancelar</a>
         </div>
     </form>
 </div>

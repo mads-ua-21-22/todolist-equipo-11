@@ -107,6 +107,7 @@ public class TareaWebTest {
         // Verificamos que se ha llamado al método para
         // añadir una tarea con los parámetros correctos
 
-        verify(tareaService).nuevaTareaUsuario(1L, "Estudiar examen MADS");
+        verify(tareaService).nuevaTareaUsuario(1L, "Estudiar examen MADS",null,null);
     }
+
 }

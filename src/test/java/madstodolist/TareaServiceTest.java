@@ -1,8 +1,10 @@
 package madstodolist;
 
 
+import madstodolist.model.Equipo;
 import madstodolist.model.Tarea;
 import madstodolist.model.Usuario;
+import madstodolist.service.EquipoService;
 import madstodolist.service.TareaService;
 import madstodolist.service.UsuarioService;
 import org.junit.jupiter.api.Test;
@@ -10,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
 public class TareaServiceTest {
@@ -21,8 +26,10 @@ public class TareaServiceTest {
     UsuarioService usuarioService;
 
     @Autowired
-    TareaService tareaService;
+    EquipoService equipoService;
 
+    @Autowired
+    TareaService tareaService;
 
     @Test
     @Transactional
@@ -37,6 +44,46 @@ public class TareaServiceTest {
 
         Usuario usuario = usuarioService.findByEmail("user@ua");
         assertThat(usuario.getTareas()).contains(tarea);
+    }
+
+    @Test
+    @Transactional
+    public void testNuevaTareaUsuarioDescripcion() {
+        Tarea tarea = tareaService.nuevaTareaUsuario(1L,"Tare Descripcion","Test tarea descripcion");
+
+        Usuario usuario = usuarioService.findById(1L);
+
+        assertThat(usuario.getTareas()).contains(tarea);
+        assertThat(tarea.getDescripcion()).isEqualTo("Test tarea descripcion");
+
+    }
+
+    @Test
+    @Transactional
+    public void testNuevaTareaUsuarioFecha() {
+        Date fecha = new Date();
+        Tarea tarea = tareaService.nuevaTareaUsuario(1L,"Practica 5 MADS","Test Practica 5", fecha);
+
+        Usuario usuario = usuarioService.findByEmail("user@ua");
+
+        assertThat(usuario.getTareas()).contains(tarea);
+        assertThat(tarea.getFechaLimite()).isEqualTo(fecha);
+    }
+
+    @Test
+    @Transactional
+    public void testNuevaTareaEquipo() {
+        Equipo equipo = equipoService.findById(1L);
+
+        assertThat(equipo).isNotNull();
+
+        Date fecha = new Date();
+        Tarea tare = tareaService.nuevaTareaEquipo(1L,1L,"Practica 5 MADS","Descripcion",fecha);
+
+        assertThat(tare.getEquipo()).isEqualTo(equipo);
+        assertThat(tare.getTitulo()).isEqualTo("Practica 5 MADS");
+        assertThat(tare.getDescripcion()).isEqualTo("Descripcion");
+        assertThat(tare.getFechaLimite()).isEqualTo(fecha);
     }
 
     @Test
@@ -109,5 +156,84 @@ public class TareaServiceTest {
         // THEN
 
         assertThat(tareaService.findById(tarea.getId())).isNull();
+    }
+
+    @Test
+    @Transactional
+    public void allTareasCompletadasTest() {
+        Tarea t1 = tareaService.nuevaTareaUsuario(1L, "Tarea 1");
+        Tarea t2 = tareaService.nuevaTareaUsuario(1L, "Tarea 2");
+        Tarea t3 = tareaService.nuevaTareaUsuario(1L, "Tarea 3");
+
+        t2.setComplete(); t3.setComplete();
+        ArrayList<Tarea> tareasCompletadas = tareaService.allTareasCompletadasUsuario(1L);
+
+        assertThat(tareasCompletadas).hasSize(2);
+    }
+
+    @Test
+    @Transactional
+    public void allTareasNoCompletadasTest() {
+        Tarea t1 = tareaService.nuevaTareaUsuario(1L, "Tarea 1");
+        Tarea t2 = tareaService.nuevaTareaUsuario(1L, "Tarea 2");
+        Tarea t3 = tareaService.nuevaTareaUsuario(1L, "Tarea 3");
+
+        t2.setComplete(); t3.setComplete();
+        ArrayList<Tarea> tareasCompletadas = tareaService.allTareasNoCompletadasUsuario(1L);
+
+        assertThat(tareasCompletadas).hasSize(3);
+    }
+
+    @Test
+    public void cambiarTareaACompletada() {
+        Tarea tarea = tareaService.findById(1L);
+        tareaService.completaTarea(tarea);
+
+        assertThat(tarea.isComplete()).isTrue();
+    }
+
+    @Test
+    @Transactional
+    public void cambiarUsuarioTareaEquipoTest() {
+        Tarea tarea = tareaService.findById(1L);
+        Equipo equipo = equipoService.findById(1L);
+        tarea.setEquipo(equipo);
+
+        Usuario usuario = new Usuario("ejemplo@ua");
+        usuario.setPassword("123");
+        usuarioService.registrar(usuario);
+
+        equipoService.agregarAEquipo(usuario.getId(), equipo.getId());
+        assertThat(tarea.getUsuario()).isNotEqualTo(usuario);
+        boolean resultado = tareaService.cambiarUsuarioTarea(tarea.getId(), usuario.getId());
+
+        assertThat(resultado).isEqualTo(true);
+        assertThat(tarea.getUsuario()).isEqualTo(usuario);
+    }
+
+    @Test
+    @Transactional
+    public void cambiarUsuarioTareaEquipoYaNoSePuedeTest() {
+        // inicializamos datos
+        Tarea tarea = tareaService.findById(1L);
+        Equipo equipo = equipoService.findById(1L);
+        tarea.setEquipo(equipo);
+        Usuario userTarea = usuarioService.findById(2L);
+
+        // cambiamos usuario a tarea
+        boolean resultado = tareaService.cambiarUsuarioTarea(tarea.getId(), userTarea.getId());
+        assertThat(resultado).isEqualTo(true);
+
+        // intetamos cambiar usuario cuando ya no se puede
+        Usuario usuario = new Usuario("ejemplo@ua");
+        usuario.setPassword("123");
+        usuarioService.registrar(usuario);
+
+        equipoService.agregarAEquipo(usuario.getId(), equipo.getId());
+        assertThat(tarea.getUsuario()).isNotEqualTo(usuario);
+        resultado = tareaService.cambiarUsuarioTarea(tarea.getId(), usuario.getId());
+
+        // cmprobamos resultados
+        assertThat(resultado).isEqualTo(false);
     }
 }

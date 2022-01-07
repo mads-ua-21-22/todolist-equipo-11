@@ -8,19 +8,18 @@
 
     <div class="container-fluid">
 
-        <div class="row mt-3">
-            <div class="col">
-                <h2 th:text="'Listado de equipos'"></h2>
-            </div>
+        <div class="mt-3 mx-4 d-flex">
+            <h2 th:text="'Equipos'"></h2>
+            <a class="btn btn-primary ml-auto m-1" th:href="@{/equipos/crear}"><i class="fas fa-plus"></i></a>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-3 px-4">
             <div class="col">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>Equipo</th>
-                        <th th:if="${usuario.getAdministrador()}" >Accion</th>
+                        <th th:if="${usuario.getAdministrador()}" >Acción</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -29,18 +28,20 @@
                             <a th:href="@{/equipos/{id}(id=${equipo.id})}" th:text="${equipo.nombre}"></a>
                         </td>
                         <td th:if="${usuario.getAdministrador()}">
-                          <a  class="btn btn-primary btn-xs" th:href="@{/equipos/{id}/editar(id=${equipo.id})}"/>Editar</a>
-                            <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
-                                th:onclick="'del(\'/equipo/' + ${equipo.id} + '\')'">Borrar equipo</button></td>
-
+                            <div class="btn-group">
+                                <a  class="btn btn-primary btn-xs" th:href="@{/equipos/{id}/editar(id=${equipo.id})}"/><i class="fas fa-pen"></i></a>
+                                <button type="button" class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                                    th:onclick="'del(\'/equipo/' + ${equipo.id} + '\')'"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-                <p><a class="btn btn-primary" th:href="@{/equipos/crear}"> Crear equipo</a>
             </div>
         </div>
 
     </div>
+
 
 
     </div>
@@ -50,6 +51,7 @@
     <!-- Lanzamos una petición DELETE por JavaScript para borrar una tarea -->
     <script type="text/javascript">
         function del(urlBorrar) {
+            console.log(urlBorrar);
             if (confirm('¿Estás seguro/a de que quieres borrar el equipo?')) {
                 fetch(urlBorrar, {
                     method: 'DELETE'

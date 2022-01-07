@@ -1,20 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: head (titulo='Descripción del usuario')"></head>
+<head th:replace="fragments :: head (titulo=${usuario.getNombre()})"></head>
 
 <body>
 <header th:replace="fragments:: header (esAdmin=${usuarioSesion.getAdministrador()} ,username=${usuarioSesion.nombre}, userid=${usuarioSesion.id})"> </header>
 <div class="container-fluid">
-    <div class="container-fluid">
-        <h1>Descripcion del usuario: <td th:text="${usuario.id}"></td></h1>
-        <ul>
-            <li>Id del usuario: <td th:text="${usuario.id}"></td> </li>
-            <li>Nombre del usuario: <td th:text="${usuario.nombre}"></td> </li>
-            <li>Email del usuario: <td th:text="${usuario.email}"></td> </li>
-            <li>Fecha de nacimiento del usuario: <td th:text="${usuario.fechaNacimiento}"></td> </li>
-        </ul>
-        <a class="btn btn-primary btn-xs" th:href="@{/usuarios}"/>Volver atrás</a>
+    <div class="pt-4">
+        <div class="p-5 card">
+            <h1 class="card-header text-center" th:text="${usuario.getNombre()}"></h1>
+            <div class="card-group text-muted p-4">
+                <div class="card">
+                    <div class="list-group-item">
+                        <p>Id</p>
+                    </div>
+                    <div class="list-group-item">
+                        <p>Nombre</p>
+                    </div>
+                    <div class="list-group-item">
+                        <p>Email</p>
+                    </div>
+                    <div class="list-group-item">
+                        <p>Fecha de nacimiento</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="list-group-item">
+                        <p class="font-weight-bold" th:text="${usuario.id}"></p>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="font-weight-bold" th:text="${usuario.nombre}"></p>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="font-weight-bold" th:text="${usuario.email}"></p>
+                    </div>
+                    <div class="list-group-item">
+                        <p class="font-weight-bold" th:text="${usuario.fechaNacimiento}"></p>
+                    </div>
+                </div>
+            </div>
+            <button class="btn text-primary text-center d-block w-100" onclick="volver()"/>Volver</a>
+        </div>
     </div>
 
 </div>

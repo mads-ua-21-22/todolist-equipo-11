@@ -1,5 +1,6 @@
 package madstodolist;
 
+import madstodolist.model.Equipo;
 import madstodolist.model.Usuario;
 import madstodolist.service.UsuarioService;
 import madstodolist.service.UsuarioServiceException;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -115,5 +118,18 @@ public class UsuarioServiceTest {
         // THEN
 
         assertThat(usuario.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    public void allEquiposUsuarioTest() {
+        // Datos cargados de datos-test.sql
+
+        // WHEN
+
+        Usuario usuario = usuarioService.findByEmail("user@ua");
+
+        // THEN
+        List<Equipo> equipos = usuarioService.allEquiposUsuario(usuario.getId());
+        assertThat(equipos).hasSize(1);
     }
 }
