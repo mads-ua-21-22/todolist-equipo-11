@@ -31,9 +31,6 @@ public class TareaServiceTest {
     @Autowired
     TareaService tareaService;
 
-    @Autowired
-    EquipoService equipoService;
-
     @Test
     @Transactional
     public void testNuevaTareaUsuario() {
